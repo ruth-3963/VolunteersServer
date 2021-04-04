@@ -1,0 +1,8 @@
+C:\Users\ilani\VolunteersServer\DTO\bin\Debug\DTO.dll
+C:\Users\ilani\VolunteersServer\DTO\bin\Debug\DTO.pdb
+C:\Users\ilani\VolunteersServer\DTO\obj\Debug\DTO.csproj.CoreCompileInputs.cache
+C:\Users\ilani\VolunteersServer\DTO\obj\Debug\DTO.dll
+C:\Users\ilani\VolunteersServer\DTO\obj\Debug\DTO.pdb
+C:\Users\ilani\VolunteersServer\DTO\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ilani\VolunteersServer\DTO\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ilani\VolunteersServer\DTO\obj\Debug\DTO.csproj.CopyComplete

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="volunteersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="groups">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="id_manager" Type="int" Nullable="false" />
+    <Property Name="description" Type="varchar(max)" />
+    <Property Name="events" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="user_to_group">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="int" />
+    <Property Name="group_id" Type="int" />
+    <Property Name="is_manager" Type="bit" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="password" Type="varchar" MaxLength="255" />
+    <Property Name="phone" Type="varchar" MaxLength="15" />
+  </EntityType>
+  <Association Name="fk_manager_to_users">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="groups" Type="Self.groups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="groups">
+        <PropertyRef Name="id_manager" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userGroup_to_user">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user_to_group">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userGroupr_to_group">
+    <End Role="groups" Type="Self.groups" Multiplicity="0..1" />
+    <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="groups">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user_to_group">
+        <PropertyRef Name="group_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="volunteersModelStoreContainer">
+    <EntitySet Name="groups" EntityType="Self.groups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user_to_group" EntityType="Self.user_to_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="groups" EntitySet="groups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
+      <End Role="users" EntitySet="users" />
+      <End Role="user_to_group" EntitySet="user_to_group" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
+      <End Role="groups" EntitySet="groups" />
+      <End Role="user_to_group" EntitySet="user_to_group" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

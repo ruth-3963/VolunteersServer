@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="volunteersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="groups">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="id_manager" Type="int" Nullable="false" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="events" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="user_to_group">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="group_id" Type="int" />
+          <Property Name="is_manager" Type="bit" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" />
+          <Property Name="phone" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <Association Name="fk_manager_to_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="groups" Type="Self.groups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="groups">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroup_to_user">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroupr_to_group">
+          <End Role="groups" Type="Self.groups" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="volunteersModelStoreContainer">
+          <EntitySet Name="groups" EntityType="Self.groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user_to_group" EntityType="Self.user_to_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="groups" EntitySet="groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
+            <End Role="users" EntitySet="users" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
+            <End Role="groups" EntitySet="groups" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="volunteersModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="group">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_manager" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="Self.fk_manager_to_users" FromRole="groups" ToRole="users" />
+          <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroupr_to_group" FromRole="groups" ToRole="user_to_group" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="events" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="user_to_group">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="group_id" Type="Int32" />
+          <Property Name="is_manager" Type="Boolean" />
+          <NavigationProperty Name="group" Relationship="Self.FK_userGroupr_to_group" FromRole="user_to_group" ToRole="groups" />
+          <NavigationProperty Name="user" Relationship="Self.FK_userGroup_to_user" FromRole="user_to_group" ToRole="users" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="groups" Relationship="Self.fk_manager_to_users" FromRole="users" ToRole="groups" />
+          <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroup_to_user" FromRole="users" ToRole="user_to_group" />
+        </EntityType>
+        <Association Name="fk_manager_to_users">
+          <End Role="users" Type="Self.user" Multiplicity="1" />
+          <End Role="groups" Type="Self.group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="groups">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroupr_to_group">
+          <End Role="groups" Type="Self.group" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroup_to_user">
+          <End Role="users" Type="Self.user" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="volunteersEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="groups" EntityType="Self.group" />
+          <EntitySet Name="user_to_group" EntityType="Self.user_to_group" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="groups" EntitySet="groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
+            <End Role="groups" EntitySet="groups" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
+            <End Role="users" EntitySet="users" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="volunteersModelStoreContainer" CdmEntityContainer="volunteersEntities">
+          <EntitySetMapping Name="groups">
+            <EntityTypeMapping TypeName="volunteersModel.group">
+              <MappingFragment StoreEntitySet="groups">
+                <ScalarProperty Name="events" ColumnName="events" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id_manager" ColumnName="id_manager" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_to_group">
+            <EntityTypeMapping TypeName="volunteersModel.user_to_group">
+              <MappingFragment StoreEntitySet="user_to_group">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="group_id" ColumnName="group_id" />
+                <ScalarProperty Name="is_manager" ColumnName="is_manager" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="volunteersModel.user">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

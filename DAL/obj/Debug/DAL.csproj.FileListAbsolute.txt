@@ -1,0 +1,16 @@
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\DAL.dll.config
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\DAL.dll
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\DAL.pdb
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\DTO.dll
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\EntityFramework.dll
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\DTO.pdb
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\EntityFramework.xml
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\ilani\VolunteersServer\DAL\obj\Debug\DAL.csprojAssemblyReference.cache
+C:\Users\ilani\VolunteersServer\DAL\obj\Debug\DAL.csproj.CoreCompileInputs.cache
+C:\Users\ilani\VolunteersServer\DAL\obj\Debug\DAL.csproj.CopyComplete
+C:\Users\ilani\VolunteersServer\DAL\obj\Debug\DAL.dll
+C:\Users\ilani\VolunteersServer\DAL\obj\Debug\DAL.pdb
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ilani\VolunteersServer\DAL\bin\Debug\Newtonsoft.Json.xml
