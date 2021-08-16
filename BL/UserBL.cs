@@ -1,9 +1,11 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
 using DAL;
 using DTO;
 namespace BL
@@ -40,6 +42,7 @@ namespace BL
                 }
                 db.user_to_group.Add(new user_to_group() { group_id = group.id, user_id = user1.id, is_manager = false });
                 db.SaveChanges();
+                sendEmail(user1);
             });
 
         }
@@ -49,6 +52,27 @@ namespace BL
             user user = db.users.Where(u => u.email == email && u.password == password).FirstOrDefault();
             if (user == null) return null;
             return Convert.UserConverter.ConvertToUserDTO(user);
+        }
+
+        private static void sendEmail(user user)
+        {
+            string from = "ostrovruti@gmail.com";
+            string to = "mo9080755@gmail.com";
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
+                EnableSsl = true,
+            };
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(from),
+                Subject = "subject",
+                Body = "<h1>Hello</h1>",
+                IsBodyHtml = true,
+            };
+            mailMessage.To.Add(to);
+            
         }
     }
 }
