@@ -8,19 +8,29 @@ using System.Net;
 using System.Net.Mail;
 using DAL;
 using DTO;
+using System.Reflection;
+
 namespace BL
 {
     public class UserBL
     {
         public static volunteersEntities db = new volunteersEntities();
-        public static void create(user user)
+        public static UserDTO create(user user)
         {
             if (user == null)
-                return;
-            db.users.Add(user);
+                return null;
+            user userFromDB = db.users.FirstOrDefault(u => user.email == u.email);
+            if(userFromDB == null) userFromDB = db.users.Add(user);
+            else
+            {
+                userFromDB.password = user.password;
+                userFromDB.name = user.name;
+                userFromDB.phone = user.phone;
+            }
             try
             {
                 db.SaveChanges();
+                return Convert.UserConverter.ConvertToUserDTO(userFromDB);
             }
             catch (DbUpdateException)
             {
@@ -49,8 +59,8 @@ namespace BL
 
         public static UserDTO SignIn(string email, string password)
         {
-            user user = db.users.Where(u => u.email == email && u.password == password).FirstOrDefault();
-            if (user == null) return null;
+            user user = db.users.Where(u => u.email == email).FirstOrDefault();
+            if (user == null ||(user.password!=null && !user.password.Equals(password)) ) return null;
             return Convert.UserConverter.ConvertToUserDTO(user);
         }
 
@@ -72,7 +82,7 @@ namespace BL
                 IsBodyHtml = true,
             };
             mailMessage.To.Add(to);
-            
+            //natasmtpClient.Send(mailMessage);
         }
     }
 }

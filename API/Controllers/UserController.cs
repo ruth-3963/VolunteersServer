@@ -16,9 +16,9 @@ namespace API.Controllers
     public class UserController : ApiController
     {
         //Post api/User
-        public void Post(user user)
+        public UserDTO Post(user user)
         {
-            UserBL.create(user);
+            return UserBL.create(user);
         }
         
        [Route("AddUsers")]
