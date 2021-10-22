@@ -1,5 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="volunteersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="event_to_user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" Nullable="false" />
+    <Property Name="eventId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="events">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StartTime" Type="datetime" Nullable="false" />
+    <Property Name="EndTime" Type="datetime" Nullable="false" />
+    <Property Name="OwnerId" Type="int" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="Subject" Type="nchar" MaxLength="10" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
   <EntityType Name="groups">
     <Key>
       <PropertyRef Name="id" />
@@ -9,6 +29,16 @@
     <Property Name="id_manager" Type="int" Nullable="false" />
     <Property Name="description" Type="varchar(max)" />
     <Property Name="events" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
   </EntityType>
   <EntityType Name="user_to_group">
     <Key>
@@ -29,6 +59,42 @@
     <Property Name="password" Type="varchar" MaxLength="255" />
     <Property Name="phone" Type="varchar" MaxLength="15" />
   </EntityType>
+  <Association Name="FK_event">
+    <End Role="events" Type="Self.events" Multiplicity="1" />
+    <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="events">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="event_to_user">
+        <PropertyRef Name="eventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_event_user">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="events" Type="Self.events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="events">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_events_group">
+    <End Role="groups" Type="Self.groups" Multiplicity="1" />
+    <End Role="events" Type="Self.events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="groups">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="events">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="fk_manager_to_users">
     <End Role="users" Type="Self.users" Multiplicity="1" />
     <End Role="groups" Type="Self.groups" Multiplicity="*" />
@@ -38,6 +104,18 @@
       </Principal>
       <Dependent Role="groups">
         <PropertyRef Name="id_manager" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_user_event">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="event_to_user">
+        <PropertyRef Name="id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -66,12 +144,31 @@
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="volunteersModelStoreContainer">
+    <EntitySet Name="event_to_user" EntityType="Self.event_to_user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="events" EntityType="Self.events" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="groups" EntityType="Self.groups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="user_to_group" EntityType="Self.user_to_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_event" Association="Self.FK_event">
+      <End Role="events" EntitySet="events" />
+      <End Role="event_to_user" EntitySet="event_to_user" />
+    </AssociationSet>
+    <AssociationSet Name="FK_event_user" Association="Self.FK_event_user">
+      <End Role="users" EntitySet="users" />
+      <End Role="events" EntitySet="events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_events_group" Association="Self.FK_events_group">
+      <End Role="groups" EntitySet="groups" />
+      <End Role="events" EntitySet="events" />
+    </AssociationSet>
     <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
       <End Role="users" EntitySet="users" />
       <End Role="groups" EntitySet="groups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_user_event" Association="Self.FK_user_event">
+      <End Role="users" EntitySet="users" />
+      <End Role="event_to_user" EntitySet="event_to_user" />
     </AssociationSet>
     <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
       <End Role="users" EntitySet="users" />

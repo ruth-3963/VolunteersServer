@@ -23,10 +23,13 @@ namespace BL
             return GroupConverter.ConvertToListOfGroupDTO(groups);
         }
         [HttpPut]
-        public static void AddEventsToGroup(group group, JArray events)
+        public static void AddEventsToGroup(GroupDTO group, List<EventDTO> events)
         {
             group group1 = db.groups.Where(g => g.id == group.id).FirstOrDefault();
-            group1.events = events.ToString();
+            events.ForEach(e =>
+            {
+                db.events.Add(Convert.EventConverter.ConvertToEvent(e));
+            });
             db.SaveChanges();
         }
 
@@ -36,30 +39,31 @@ namespace BL
             return GroupConverter.ConvertToGroupDTO(group1);
         }
 
-        public static GroupDTO createGroup(dynamic data)
+        public static GroupDTO createGroup(string email, string name, string description)
         {
 
-            group g = new group() { name = data.name, description = data.description };
-            string email = data.email.ToString();
-            user u = db.users.Where(uu => uu.email == email).FirstOrDefault();
-            string name = data.name.ToString();
-            if (db.groups.Any(gr => gr.name == name && gr.id_manager == u.id))
-                return null;
-            else
-            {
-                g.id_manager = u.id;
-                db.groups.Add(g);
-                db.SaveChanges();
-                //g = db.groups.Last();
-                db.user_to_group.Add(new user_to_group { user_id = u.id, group_id = g.id, is_manager = true });
-                db.SaveChanges();
-                return GroupConverter.ConvertToGroupDTO(g);
-            }
+            //group g = new group() { name = data.name, description = data.description };
+            //string email = data.email.ToString();
+            //user u = db.users.Where(uu => uu.email == email).FirstOrDefault();
+            //string name = data.name.ToString();
+            //if (db.groups.Any(gr => gr.name == name && gr.id_manager == u.id))
+            //    return null;
+            //else
+            //{
+            //    g.id_manager = u.id;
+            //    db.groups.Add(g);
+            //    db.SaveChanges();
+            //    //g = db.groups.Last();
+            //    db.user_to_group.Add(new user_to_group { user_id = u.id, group_id = g.id, is_manager = true });
+            //    db.SaveChanges();
+            //    return GroupConverter.ConvertToGroupDTO(g);
+            //}
+            return null;
         }
-        public static IEnumerable<dynamic> getGroupsByUserWithManeger(int id)
+        public static List<ManagerGroup> getGroupsByUserWithManeger(int id)
         {
             var lo = db.groups.Join(db.users, g => g.id_manager, u => u.id,
-                        (g, u) => new { id = g.id, name = g.name, mName = u.name, mEmail = u.email })
+                        (g, u) => new ManagerGroup { id = g.id, name = g.name, mName = u.name, mEmail = u.email })
                         .Where(groupWithManager =>
                         db.user_to_group.Any(ug => ug.group_id == groupWithManager.id && ug.user_id == id));
             return lo.ToList();

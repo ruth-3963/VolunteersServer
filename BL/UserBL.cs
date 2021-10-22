@@ -15,12 +15,14 @@ namespace BL
     public class UserBL
     {
         public static volunteersEntities db = new volunteersEntities();
-        public static UserDTO create(user user)
+        public static UserDTO create(UserDTO user)
         {
             if (user == null)
                 return null;
             user userFromDB = db.users.FirstOrDefault(u => user.email == u.email);
-            if(userFromDB == null) userFromDB = db.users.Add(user);
+
+            if (userFromDB == null) 
+                userFromDB = db.users.Add(Convert.UserConverter.ConvertToUser(user));
             else
             {
                 userFromDB.password = user.password;
@@ -30,7 +32,7 @@ namespace BL
             try
             {
                 db.SaveChanges();
-                return Convert.UserConverter.ConvertToUserDTO(userFromDB);
+                return user;
             }
             catch (DbUpdateException)
             {
@@ -38,7 +40,7 @@ namespace BL
             }
         }
 
-        public static void addListOfVolunteers(List<user> list, group group)
+        public static void addListOfVolunteers(List<UserDTO> list, GroupDTO group)
         {
             list.ForEach(item =>
             {

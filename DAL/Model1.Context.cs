@@ -26,7 +26,10 @@ namespace DAL
         }
     
         public virtual DbSet<group> groups { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<user_to_group> user_to_group { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<event_to_user> event_to_user { get; set; }
+        public virtual DbSet<@event> events { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace DAL
         public group()
         {
             this.user_to_group = new HashSet<user_to_group>();
+            this.events1 = new HashSet<@event>();
         }
     
         public int id { get; set; }
@@ -29,5 +30,7 @@ namespace DAL
         public virtual user user { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<user_to_group> user_to_group { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<@event> events1 { get; set; }
     }
 }

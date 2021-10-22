@@ -4,14 +4,21 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="24a37533f7d24a498c93d0d281d8ef2e" Name="Diagram1">
-        <EntityTypeShape EntityType="volunteersModel.group" Width="1.5" PointX="5.375" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="volunteersModel.user_to_group" Width="1.5" PointX="3.375" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="volunteersModel.user" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+      <Diagram DiagramId="20937d50ac494e728da9a5b52366b078" Name="Diagram1">
+        <EntityTypeShape EntityType="volunteersModel.group" Width="1.5" PointX="4.125" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="volunteersModel.sysdiagram" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="volunteersModel.user_to_group" Width="1.5" PointX="6.5" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="volunteersModel.user" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
         <AssociationConnector Association="volunteersModel.fk_manager_to_users" ManuallyRouted="false" />
         <AssociationConnector Association="volunteersModel.FK_userGroupr_to_group" ManuallyRouted="false" />
         <AssociationConnector Association="volunteersModel.FK_userGroup_to_user" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="volunteersModel.event_to_user" Width="1.5" PointX="6.375" PointY="7.75" />
+        <AssociationConnector Association="volunteersModel.FK_user_event" />
+        <EntityTypeShape EntityType="volunteersModel.event" Width="1.5" PointX="6.375" PointY="0.75" />
+        <AssociationConnector Association="volunteersModel.FK_event" />
+        <AssociationConnector Association="volunteersModel.FK_event_user" />
+        <AssociationConnector Association="volunteersModel.FK_events_group" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

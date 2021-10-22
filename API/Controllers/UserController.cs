@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DAL;
 using DTO;
 using BL;
 using System.Web.Http.Cors;
@@ -16,18 +15,17 @@ namespace API.Controllers
     public class UserController : ApiController
     {
         //Post api/User
-        public UserDTO Post(user user)
+        public UserDTO Post(UserDTO user)
         {
             return UserBL.create(user);
         }
         
        [Route("AddUsers")]
        [HttpPost]
-        public void Post(JObject data)
+        public void Post([FromBody] UserGroupDTO userGroup)
         {
-            List<user> list = data["list"].ToObject<List<user>>();
-            group group = data["group"].ToObject<group>();
-            UserBL.addListOfVolunteers(list,group);
+         
+            UserBL.addListOfVolunteers(userGroup.users,userGroup.group);
             
         }
         //GET api/User

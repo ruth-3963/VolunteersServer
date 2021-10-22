@@ -15,13 +15,13 @@ namespace API.Controllers
     {
         [Route("GetByManager")]
         [HttpGet]
-        public IEnumerable<dynamic> GetByManager(string id)
+        public List<ManagerGroup> GetByManager(string id)
         {
             return GroupBL.getGroupsByUserWithManeger(int.Parse(id));
         }
-        public GroupDTO Post(dynamic data)
+        public GroupDTO Post(string email, string name, string description)
         {
-            return GroupBL.createGroup(data);
+            return GroupBL.createGroup(email,name,description);
         }
         public GroupDTO Get(string id)
         {
