@@ -26,6 +26,7 @@
     <EntitySetMapping Name="user_to_group">
       <EntityTypeMapping TypeName="volunteersModel.user_to_group">
         <MappingFragment StoreEntitySet="user_to_group">
+          <ScalarProperty Name="color" ColumnName="color" />
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="user_id" ColumnName="user_id" />
           <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -44,24 +45,26 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="event_to_user">
-      <EntityTypeMapping TypeName="volunteersModel.event_to_user">
-        <MappingFragment StoreEntitySet="event_to_user">
-          <ScalarProperty Name="eventId" ColumnName="eventId" />
-          <ScalarProperty Name="userId" ColumnName="userId" />
-          <ScalarProperty Name="id" ColumnName="id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="events">
       <EntityTypeMapping TypeName="volunteersModel.event">
         <MappingFragment StoreEntitySet="events">
+          <ScalarProperty Name="Guid" ColumnName="Guid" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Subject" ColumnName="Subject" />
           <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
           <ScalarProperty Name="EndTime" ColumnName="EndTime" />
           <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="event_to_user">
+      <EntityTypeMapping TypeName="volunteersModel.event_to_user">
+        <MappingFragment StoreEntitySet="event_to_user">
+          <ScalarProperty Name="groupId" ColumnName="groupId" />
+          <ScalarProperty Name="eventId" ColumnName="eventId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>

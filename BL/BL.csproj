@@ -77,12 +77,15 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Convert\EventConverter.cs" />
+    <Compile Include="Convert\EventToUserConverter.cs" />
     <Compile Include="Convert\GroupConverter.cs" />
     <Compile Include="Convert\UserConverter.cs" />
+    <Compile Include="Convert\UsersToGroupsConverter.cs" />
     <Compile Include="EventBL.cs" />
     <Compile Include="GroupBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserBL.cs" />
+    <Compile Include="UsersToGroupsBL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

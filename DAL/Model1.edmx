@@ -12,6 +12,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
           <Property Name="eventId" Type="int" Nullable="false" />
+          <Property Name="groupId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="events">
           <Key>
@@ -24,6 +25,7 @@
           <Property Name="GroupId" Type="int" Nullable="false" />
           <Property Name="Subject" Type="nchar" MaxLength="10" />
           <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Guid" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="groups">
           <Key>
@@ -53,6 +55,7 @@
           <Property Name="user_id" Type="int" />
           <Property Name="group_id" Type="int" />
           <Property Name="is_manager" Type="bit" />
+          <Property Name="color" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="users">
           <Key>
@@ -64,7 +67,19 @@
           <Property Name="password" Type="varchar" MaxLength="255" />
           <Property Name="phone" Type="varchar" MaxLength="15" />
         </EntityType>
-        <Association Name="FK_event">
+        <Association Name="FK_event_to_user">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_to_user">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_event_to_user_event">
           <End Role="events" Type="Self.events" Multiplicity="1" />
           <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
           <ReferentialConstraint>
@@ -73,6 +88,18 @@
             </Principal>
             <Dependent Role="event_to_user">
               <PropertyRef Name="eventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_event_to_user_groups">
+          <End Role="groups" Type="Self.groups" Multiplicity="1" />
+          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_to_user">
+              <PropertyRef Name="groupId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -112,18 +139,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_user_event">
-          <End Role="users" Type="Self.users" Multiplicity="1" />
-          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="event_to_user">
-              <PropertyRef Name="id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_userGroup_to_user">
           <End Role="users" Type="Self.users" Multiplicity="0..1" />
           <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
@@ -155,8 +170,16 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="user_to_group" EntityType="Self.user_to_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_event" Association="Self.FK_event">
+          <AssociationSet Name="FK_event_to_user" Association="Self.FK_event_to_user">
+            <End Role="users" EntitySet="users" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_event_to_user_event" Association="Self.FK_event_to_user_event">
             <End Role="events" EntitySet="events" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_event_to_user_groups" Association="Self.FK_event_to_user_groups">
+            <End Role="groups" EntitySet="groups" />
             <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_user" Association="Self.FK_event_user">
@@ -170,10 +193,6 @@
           <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
             <End Role="users" EntitySet="users" />
             <End Role="groups" EntitySet="groups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_user_event" Association="Self.FK_user_event">
-            <End Role="users" EntitySet="users" />
-            <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
             <End Role="users" EntitySet="users" />
@@ -200,6 +219,7 @@
           <NavigationProperty Name="user" Relationship="Self.fk_manager_to_users" FromRole="groups" ToRole="users" />
           <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroupr_to_group" FromRole="groups" ToRole="user_to_group" />
           <NavigationProperty Name="events1" Relationship="volunteersModel.FK_events_group" FromRole="group" ToRole="event" />
+          <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user_groups" FromRole="group" ToRole="event_to_user" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -221,6 +241,7 @@
           <Property Name="is_manager" Type="Boolean" />
           <NavigationProperty Name="group" Relationship="Self.FK_userGroupr_to_group" FromRole="user_to_group" ToRole="groups" />
           <NavigationProperty Name="user" Relationship="Self.FK_userGroup_to_user" FromRole="user_to_group" ToRole="users" />
+          <Property Name="color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="user">
           <Key>
@@ -233,8 +254,8 @@
           <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="groups" Relationship="Self.fk_manager_to_users" FromRole="users" ToRole="groups" />
           <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroup_to_user" FromRole="users" ToRole="user_to_group" />
-          <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_user_event" FromRole="user" ToRole="event_to_user" />
           <NavigationProperty Name="events" Relationship="volunteersModel.FK_event_user" FromRole="user" ToRole="event" />
+          <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user" FromRole="user" ToRole="event_to_user" />
         </EntityType>
         <Association Name="fk_manager_to_users">
           <End Role="users" Type="Self.user" Multiplicity="1" />
@@ -289,16 +310,7 @@
             <End Role="users" EntitySet="users" />
             <End Role="user_to_group" EntitySet="user_to_group" />
           </AssociationSet>
-          <EntitySet Name="event_to_user" EntityType="volunteersModel.event_to_user" />
-          <AssociationSet Name="FK_user_event" Association="volunteersModel.FK_user_event">
-            <End Role="user" EntitySet="users" />
-            <End Role="event_to_user" EntitySet="event_to_user" />
-          </AssociationSet>
           <EntitySet Name="events" EntityType="volunteersModel.event" />
-          <AssociationSet Name="FK_event" Association="volunteersModel.FK_event">
-            <End Role="event" EntitySet="events" />
-            <End Role="event_to_user" EntitySet="event_to_user" />
-          </AssociationSet>
           <AssociationSet Name="FK_event_user" Association="volunteersModel.FK_event_user">
             <End Role="user" EntitySet="users" />
             <End Role="event" EntitySet="events" />
@@ -307,29 +319,20 @@
             <End Role="group" EntitySet="groups" />
             <End Role="event" EntitySet="events" />
           </AssociationSet>
+          <EntitySet Name="event_to_user" EntityType="volunteersModel.event_to_user" />
+          <AssociationSet Name="FK_event_to_user" Association="volunteersModel.FK_event_to_user">
+            <End Role="user" EntitySet="users" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_event_to_user_event" Association="volunteersModel.FK_event_to_user_event">
+            <End Role="event" EntitySet="events" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_event_to_user_groups" Association="volunteersModel.FK_event_to_user_groups">
+            <End Role="group" EntitySet="groups" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
+          </AssociationSet>
           </EntityContainer>
-        <EntityType Name="event_to_user">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="userId" Type="Int32" Nullable="false" />
-          <Property Name="eventId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="user" Relationship="volunteersModel.FK_user_event" FromRole="event_to_user" ToRole="user" />
-          <NavigationProperty Name="event" Relationship="volunteersModel.FK_event" FromRole="event_to_user" ToRole="event" />
-        </EntityType>
-        <Association Name="FK_user_event">
-          <End Type="volunteersModel.user" Role="user" Multiplicity="1" />
-          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="user">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="event_to_user">
-              <PropertyRef Name="id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="event">
           <Key>
             <PropertyRef Name="id" />
@@ -341,22 +344,11 @@
           <Property Name="GroupId" Type="Int32" Nullable="false" />
           <Property Name="Subject" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event" FromRole="event" ToRole="event_to_user" />
+          <Property Name="Guid" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="user" Relationship="volunteersModel.FK_event_user" FromRole="event" ToRole="user" />
           <NavigationProperty Name="group" Relationship="volunteersModel.FK_events_group" FromRole="event" ToRole="group" />
+          <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user_event" FromRole="event" ToRole="event_to_user" />
         </EntityType>
-        <Association Name="FK_event">
-          <End Type="volunteersModel.event" Role="event" Multiplicity="1" />
-          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="event">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="event_to_user">
-              <PropertyRef Name="eventId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_event_user">
           <End Type="volunteersModel.user" Role="user" Multiplicity="0..1" />
           <End Type="volunteersModel.event" Role="event" Multiplicity="*" />
@@ -378,6 +370,54 @@
             </Principal>
             <Dependent Role="event">
               <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="event_to_user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="eventId" Type="Int32" Nullable="false" />
+          <Property Name="groupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="volunteersModel.FK_event_to_user" FromRole="event_to_user" ToRole="user" />
+          <NavigationProperty Name="event" Relationship="volunteersModel.FK_event_to_user_event" FromRole="event_to_user" ToRole="event" />
+          <NavigationProperty Name="group" Relationship="volunteersModel.FK_event_to_user_groups" FromRole="event_to_user" ToRole="group" />
+        </EntityType>
+        <Association Name="FK_event_to_user">
+          <End Type="volunteersModel.user" Role="user" Multiplicity="1" />
+          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_to_user">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_event_to_user_event">
+          <End Type="volunteersModel.event" Role="event" Multiplicity="1" />
+          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="event">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_to_user">
+              <PropertyRef Name="eventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_event_to_user_groups">
+          <End Type="volunteersModel.group" Role="group" Multiplicity="1" />
+          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="group">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_to_user">
+              <PropertyRef Name="groupId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -412,6 +452,7 @@
           <EntitySetMapping Name="user_to_group">
             <EntityTypeMapping TypeName="volunteersModel.user_to_group">
               <MappingFragment StoreEntitySet="user_to_group">
+                <ScalarProperty Name="color" ColumnName="color" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -430,24 +471,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="event_to_user">
-            <EntityTypeMapping TypeName="volunteersModel.event_to_user">
-              <MappingFragment StoreEntitySet="event_to_user">
-                <ScalarProperty Name="eventId" ColumnName="eventId" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="events">
             <EntityTypeMapping TypeName="volunteersModel.event">
               <MappingFragment StoreEntitySet="events">
+                <ScalarProperty Name="Guid" ColumnName="Guid" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="event_to_user">
+            <EntityTypeMapping TypeName="volunteersModel.event_to_user">
+              <MappingFragment StoreEntitySet="event_to_user">
+                <ScalarProperty Name="groupId" ColumnName="groupId" />
+                <ScalarProperty Name="eventId" ColumnName="eventId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

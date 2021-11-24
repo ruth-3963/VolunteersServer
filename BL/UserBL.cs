@@ -32,7 +32,7 @@ namespace BL
             try
             {
                 db.SaveChanges();
-                return user;
+                return Convert.UserConverter.ConvertToUserDTO(userFromDB);
             }
             catch (DbUpdateException)
             {

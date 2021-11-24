@@ -19,9 +19,9 @@ namespace API.Controllers
         {
             return GroupBL.getGroupsByUserWithManeger(int.Parse(id));
         }
-        public GroupDTO Post(string email, string name, string description)
+        public GroupDTO Post([FromBody]GroupDTO newGroup)
         {
-            return GroupBL.createGroup(email,name,description);
+            return GroupBL.createGroup(newGroup);
         }
         public GroupDTO Get(string id)
         {

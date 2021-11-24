@@ -36,29 +36,26 @@ namespace BL
         public static GroupDTO getGroupByID(string id)
         {
             group group1 = db.groups.Where(g => g.id.ToString() == id).FirstOrDefault();
-            return GroupConverter.ConvertToGroupDTO(group1);
+            if(group1 != null)
+                return GroupConverter.ConvertToGroupDTO(group1);
+            return null;
         }
 
-        public static GroupDTO createGroup(string email, string name, string description)
+        public static GroupDTO createGroup(GroupDTO newGroup)
         {
-
-            //group g = new group() { name = data.name, description = data.description };
-            //string email = data.email.ToString();
-            //user u = db.users.Where(uu => uu.email == email).FirstOrDefault();
-            //string name = data.name.ToString();
-            //if (db.groups.Any(gr => gr.name == name && gr.id_manager == u.id))
-            //    return null;
-            //else
-            //{
-            //    g.id_manager = u.id;
-            //    db.groups.Add(g);
-            //    db.SaveChanges();
-            //    //g = db.groups.Last();
-            //    db.user_to_group.Add(new user_to_group { user_id = u.id, group_id = g.id, is_manager = true });
-            //    db.SaveChanges();
-            //    return GroupConverter.ConvertToGroupDTO(g);
-            //}
-            return null;
+            user manager = db.users.Where(user => user.id == newGroup.id_manager).FirstOrDefault();
+            if (manager == null) return null;
+            if (db.groups.Any(gr => gr.name == newGroup.name && gr.id_manager == manager.id))
+                return null;
+            group groupDB = new group() { name = newGroup.name, description = newGroup.description , id_manager = newGroup.id_manager };
+            db.groups.Add(groupDB);
+            db.SaveChanges();
+            db.user_to_group.Add(new user_to_group{
+                user_id = manager.id,
+                group_id = groupDB.id
+            });
+            db.SaveChanges();
+            return Convert.GroupConverter.ConvertToGroupDTO(groupDB);
         }
         public static List<ManagerGroup> getGroupsByUserWithManeger(int id)
         {

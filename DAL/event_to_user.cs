@@ -17,8 +17,10 @@ namespace DAL
         public int id { get; set; }
         public int userId { get; set; }
         public int eventId { get; set; }
+        public int groupId { get; set; }
     
         public virtual user user { get; set; }
         public virtual @event @event { get; set; }
+        public virtual group group { get; set; }
     }
 }

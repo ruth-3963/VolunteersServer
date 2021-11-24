@@ -46,12 +46,15 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="EventDTO.cs" />
+    <Compile Include="EventsByUserAndGroup.cs" />
+    <Compile Include="EventToUserDTO.cs" />
     <Compile Include="GroupDTO.cs" />
     <Compile Include="GroupEventDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ManagerGroup.cs" />
     <Compile Include="UserGroupsDTO.cs" />
     <Compile Include="UserDTO.cs" />
+    <Compile Include="UsersToGroupsDTO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages - Copy.config" />

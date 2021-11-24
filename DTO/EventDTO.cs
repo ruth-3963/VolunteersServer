@@ -9,10 +9,13 @@ namespace DTO
     public class EventDTO
     {
         public int id { get; set; }
-        public System.DateTime startTime { get; set; }
-        public System.DateTime endTime { get; set; }
-        public int? ownerId { get; set; } = 0;
-        public string users { get; set; }
-        public int groupId { get; set; }
+        public System.DateTime StartTime { get; set; }
+        public System.DateTime EndTime { get; set; }
+        public int? OwnerId { get; set; } = 0;
+        public int GroupId { get; set; }
+        public string Subject { get; set; }
+        public string Description { get; set; }
+        public string Guid { get; set; }
+
     }
 }

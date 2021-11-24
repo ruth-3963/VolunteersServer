@@ -18,6 +18,7 @@ namespace DAL
         public Nullable<int> user_id { get; set; }
         public Nullable<int> group_id { get; set; }
         public Nullable<bool> is_manager { get; set; }
+        public string color { get; set; }
     
         public virtual group group { get; set; }
         public virtual user user { get; set; }

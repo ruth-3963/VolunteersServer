@@ -15,10 +15,13 @@ namespace BL.Convert
             return new EventDTO
             {
                 id = _event.id,
-                startTime = _event.StartTime,
-                endTime = _event.EndTime,
-                ownerId = _event.OwnerId,
-                groupId = _event.GroupId
+                StartTime = _event.StartTime,
+                EndTime = _event.EndTime,
+                OwnerId = _event.OwnerId,
+                GroupId = _event.GroupId,
+                Subject = _event.Subject,
+                Description = _event.Description,
+                Guid = _event.Guid
             };
         }
         public static @event ConvertToEvent(EventDTO eventDTO)
@@ -26,10 +29,13 @@ namespace BL.Convert
             return new @event
             {
                 id = eventDTO.id,
-                StartTime = eventDTO.startTime,
-                EndTime = eventDTO.endTime,
-                OwnerId = eventDTO.ownerId,
-                GroupId = eventDTO.groupId
+                StartTime = eventDTO.StartTime,
+                EndTime = eventDTO.EndTime,
+                OwnerId = eventDTO.OwnerId,
+                GroupId = eventDTO.GroupId,
+                Subject = eventDTO.Subject,
+                Description = eventDTO.Description,
+                Guid = eventDTO.Guid
             };
         }
 
