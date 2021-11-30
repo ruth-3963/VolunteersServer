@@ -13,5 +13,6 @@ namespace DTO
         public int? group_id { get; set; }
         public bool? is_manager { get; set; } = false;
         public string color { get; set; }
+        public GroupDTO group { get; set; }
     }
 }

@@ -22,10 +22,10 @@ namespace API.Controllers
         
        [Route("AddUsers")]
        [HttpPost]
-        public void Post([FromBody] UserGroupDTO userGroup)
+        public void Post([FromBody] EmailsGroup emailsGroup)
         {
          
-            UserBL.addListOfVolunteers(userGroup.users,userGroup.group);
+            UserBL.addListOfVolunteers(emailsGroup.emails, emailsGroup.group);
             
         }
         //GET api/User

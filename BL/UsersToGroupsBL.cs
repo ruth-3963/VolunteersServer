@@ -21,14 +21,40 @@ namespace BL
         {
             user_to_group utg =
                 db.user_to_group.FirstOrDefault(ug => ug.user_id == userToGroup.user_id && ug.group_id == userToGroup.group_id);
-            try {
+            try
+            {
                 utg.color = userToGroup.color;
                 db.SaveChanges();
             }
-            catch(Exception e){
+            catch (Exception e)
+            {
                 Console.WriteLine(e);
             }
             return Convert.UsersToGroupsConverter.ConvertToUserToGroupDTO(utg);
+        }
+
+        public static List<OwnerData> getOwnerData(int groupId)
+        {
+            List<OwnerData> ownerData = new List<OwnerData>();
+            group currGroup = db.groups.FirstOrDefault(g => g.id == groupId);
+            if(currGroup != null)
+            {
+                currGroup.user_to_group.ToList().ForEach(ug =>
+                {
+                    if (ug.color != null)
+                    {
+                        ownerData.Add(new OwnerData
+                        {
+                            OwnerColor = ug.color,
+                            Id = ug.user_id,
+                            OwnerText = ug.user.name + "  " + ug.user.email
+                        });
+                    }
+                });
+               
+            }
+            return ownerData;
+
         }
     }
 }

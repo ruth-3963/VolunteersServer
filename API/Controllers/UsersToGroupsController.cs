@@ -22,6 +22,12 @@ namespace API.Controllers
         {
             return BL.UsersToGroupsBL.UpdateColor(data);
         }
+        [Route("getOwnerData")]
+        [HttpGet]
+        public List<OwnerData> GetOwnerData(int groupId)
+        {
+            return BL.UsersToGroupsBL.getOwnerData(groupId);
+        }
         
     }
 }

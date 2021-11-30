@@ -12,22 +12,30 @@ namespace BL.Convert
     {
         public static EventToUserDTO ConvertToEventToUserDTO(event_to_user eventToUser)
         {
+            if (eventToUser == null) return null;
             return new EventToUserDTO
             {
                 id = eventToUser.id,
                 userId = eventToUser.userId,
+                user = UserConverter.ConvertToUserDTO(eventToUser.user),
                 eventId = eventToUser.eventId,
-                groupId = eventToUser.groupId
+                _event = EventConverter.ConvertToEventDTO(eventToUser.@event,false),
+                groupId = eventToUser.groupId,
+                group = GroupConverter.ConvertToGroupDTO(eventToUser.group)
             };
         }
         public static event_to_user ConvertToEventToUser(EventToUserDTO eventToUserDTO)
         {
+            if (eventToUserDTO == null) return null;
             return new event_to_user
             {
                 id = eventToUserDTO.id,
                 userId = eventToUserDTO.userId,
+                user = UserConverter.ConvertToUser(eventToUserDTO.user),
                 eventId = eventToUserDTO.eventId,
-                groupId = eventToUserDTO.groupId
+                @event = EventConverter.ConvertToEvent(eventToUserDTO._event),
+                groupId = eventToUserDTO.groupId,
+                group = GroupConverter.ConvertToGroup(eventToUserDTO.group),
             };
         }
 
@@ -36,9 +44,9 @@ namespace BL.Convert
             List<event_to_user> groups = eventToUserDTO.Select(eu => ConvertToEventToUser(eu)).ToList();
             return groups;
         }
-        public static List<EventToUserDTO> ConvertToListOfEventToUserDTO(List<event_to_user> groups)
+        public static List<EventToUserDTO> ConvertToListOfEventToUserDTO(List<event_to_user> eventToUser)
         {
-            List<EventToUserDTO> eventToUserDTO = groups.Select(eu => ConvertToEventToUserDTO(eu)).ToList();
+            List<EventToUserDTO> eventToUserDTO = eventToUser.Select(eu => ConvertToEventToUserDTO(eu)).ToList();
             return eventToUserDTO;
         }
     }

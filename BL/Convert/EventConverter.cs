@@ -10,32 +10,37 @@ namespace BL.Convert
 {
     public class EventConverter
     {
-        public static EventDTO ConvertToEventDTO(@event _event)
+        public static EventDTO ConvertToEventDTO(@event _event,bool needDeep=true)
         {
+            if (_event == null) return null;
             return new EventDTO
             {
                 id = _event.id,
                 StartTime = _event.StartTime,
                 EndTime = _event.EndTime,
-                OwnerId = _event.OwnerId,
+                OwnerId = _event.OwnerId != null ? _event.OwnerId : null,
                 GroupId = _event.GroupId,
-                Subject = _event.Subject,
-                Description = _event.Description,
-                Guid = _event.Guid
+                Subject = _event.Subject != null ? _event.Subject : "" ,
+                Description = _event.Description != null ? _event.Description : "",
+                Guid = _event.Guid != null ? _event.Description : "",
+                eventToUserDTO = needDeep? EventToUserConverter.ConvertToListOfEventToUserDTO(_event.event_to_user.ToList()):null
             };
         }
         public static @event ConvertToEvent(EventDTO eventDTO)
         {
+            if (eventDTO == null) return null;
+
             return new @event
             {
                 id = eventDTO.id,
                 StartTime = eventDTO.StartTime,
                 EndTime = eventDTO.EndTime,
-                OwnerId = eventDTO.OwnerId,
+                OwnerId = eventDTO.OwnerId != null ? eventDTO.OwnerId : null,
                 GroupId = eventDTO.GroupId,
-                Subject = eventDTO.Subject,
-                Description = eventDTO.Description,
-                Guid = eventDTO.Guid
+                Subject = eventDTO.Subject != null ? eventDTO.Subject : null,
+                Description = eventDTO.Description != null ? eventDTO.Description : null,
+                Guid = eventDTO.Guid != null ? eventDTO.Guid : null,
+                event_to_user = eventDTO.eventToUserDTO != null ?EventToUserConverter.ConvertToListOfEventToUser(eventDTO.eventToUserDTO):null
             };
         }
 

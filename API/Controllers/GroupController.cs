@@ -19,7 +19,7 @@ namespace API.Controllers
         {
             return GroupBL.getGroupsByUserWithManeger(int.Parse(id));
         }
-        public GroupDTO Post([FromBody]GroupDTO newGroup)
+        public UsersToGroupsDTO Post([FromBody]GroupDTO newGroup)
         {
             return GroupBL.createGroup(newGroup);
         }

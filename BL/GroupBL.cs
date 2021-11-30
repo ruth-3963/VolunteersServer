@@ -41,7 +41,7 @@ namespace BL
             return null;
         }
 
-        public static GroupDTO createGroup(GroupDTO newGroup)
+        public static UsersToGroupsDTO createGroup(GroupDTO newGroup)
         {
             user manager = db.users.Where(user => user.id == newGroup.id_manager).FirstOrDefault();
             if (manager == null) return null;
@@ -50,12 +50,13 @@ namespace BL
             group groupDB = new group() { name = newGroup.name, description = newGroup.description , id_manager = newGroup.id_manager };
             db.groups.Add(groupDB);
             db.SaveChanges();
-            db.user_to_group.Add(new user_to_group{
+            user_to_group userToGroup = db.user_to_group.Add(new user_to_group{
                 user_id = manager.id,
-                group_id = groupDB.id
+                group_id = groupDB.id,
+                is_manager = true
             });
             db.SaveChanges();
-            return Convert.GroupConverter.ConvertToGroupDTO(groupDB);
+            return Convert.UsersToGroupsConverter.ConvertToUserToGroupDTO(userToGroup);
         }
         public static List<ManagerGroup> getGroupsByUserWithManeger(int id)
         {

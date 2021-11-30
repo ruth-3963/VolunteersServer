@@ -11,24 +11,28 @@ namespace BL.Convert
     {
         public static UsersToGroupsDTO ConvertToUserToGroupDTO(user_to_group userToGroup)
         {
+            if (userToGroup == null) return null;
             return new UsersToGroupsDTO
             {
                 id = userToGroup.id,
                 user_id = userToGroup.user_id,
                 group_id = userToGroup.group_id,
                 is_manager = userToGroup.is_manager,
-                color = userToGroup.color
+                color = userToGroup.color,
+                group = GroupConverter.ConvertToGroupDTO(userToGroup.group)
             };
         }
         public static user_to_group ConvertToUserToGroup(UsersToGroupsDTO userToGroupDTO)
         {
+            if (userToGroupDTO == null) return null;
             return new user_to_group
             {
                 id = userToGroupDTO.id,
                 user_id = userToGroupDTO.user_id,
                 group_id = userToGroupDTO.group_id,
                 is_manager = userToGroupDTO.is_manager,
-                color = userToGroupDTO.color
+                color = userToGroupDTO.color,
+                group = GroupConverter.ConvertToGroup(userToGroupDTO.group)
             };
         }
 

@@ -12,6 +12,7 @@ namespace BL.Convert
     {
         public static UserDTO ConvertToUserDTO(user user)
         {
+            if (user == null) return null;
             return new UserDTO
             {
                 id = user.id,
@@ -23,6 +24,7 @@ namespace BL.Convert
         }
         public static user ConvertToUser(UserDTO userDTO)
         {
+            if (userDTO == null) return null;
             return new user
             {
                 id = userDTO.id,

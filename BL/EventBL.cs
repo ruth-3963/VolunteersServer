@@ -22,7 +22,7 @@ namespace BL
             );
             db.SaveChanges();
         }
-        
+
         public static List<EventDTO> getEventsByGroup(int GroupId)
         {
             List<@event> events = db.events.Where(e => e.GroupId == GroupId).ToList();
@@ -36,9 +36,9 @@ namespace BL
                 @event currEvent = db.events.Find(e.id);
                 if (currEvent != null)
                 {
-                    currEvent.Guid = e.Guid;currEvent.OwnerId = e.OwnerId;
-                    currEvent.Subject = e.Subject;currEvent.Description = e.Description;
-                    currEvent.StartTime = e.StartTime;currEvent.EndTime = e.EndTime;
+                    currEvent.Guid = e.Guid; currEvent.OwnerId = e.OwnerId;
+                    currEvent.Subject = e.Subject; currEvent.Description = e.Description;
+                    currEvent.StartTime = e.StartTime; currEvent.EndTime = e.EndTime;
                     db.SaveChanges();
                 }
             });
@@ -54,12 +54,19 @@ namespace BL
                 db.SaveChanges();
             });
         }
+
+        public static List<EventToUserDTO> ListOfEvent(EventsByUserAndGroup data)
+        {
+            List<event_to_user> listToConvert = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
+            return Convert.EventToUserConverter.ConvertToListOfEventToUserDTO(listToConvert);
+        }
+
         public static List<EventToUserDTO> updateUserInEvent(EventsByUserAndGroup data)
         {
             List<event_to_user> etu = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
             etu.ForEach(e =>
             {
-                if(!data.events.Contains(e.eventId))
+                if (!data.events.Contains(e.eventId))
                 {
                     //remove this event
                     db.event_to_user.Remove(e);
@@ -68,18 +75,18 @@ namespace BL
             //items to add
             foreach (int id in data.events)
             {
-                if(etu.FirstOrDefault(e => e.eventId == id) == null)
+                if (etu.FirstOrDefault(e => e.eventId == id) == null)
                 {
                     db.event_to_user.Add(new event_to_user
                     {
-                        eventId = id , groupId=data.groupId , userId=data.userId
+                        eventId = id,
+                        groupId = data.groupId,
+                        userId = data.userId
                     });
                 }
             }
             db.SaveChanges();
-            return Convert.EventToUserConverter.ConvertToListOfEventToUserDTO(
-                db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList());
-
+            return ListOfEvent(data);
         }
 
 

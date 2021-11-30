@@ -50,9 +50,10 @@
     <Compile Include="EventToUserDTO.cs" />
     <Compile Include="GroupDTO.cs" />
     <Compile Include="GroupEventDTO.cs" />
+    <Compile Include="OwnerData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ManagerGroup.cs" />
-    <Compile Include="UserGroupsDTO.cs" />
+    <Compile Include="EmailGroup.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="UsersToGroupsDTO.cs" />
   </ItemGroup>

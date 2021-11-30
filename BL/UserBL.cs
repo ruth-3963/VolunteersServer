@@ -40,21 +40,23 @@ namespace BL
             }
         }
 
-        public static void addListOfVolunteers(List<UserDTO> list, GroupDTO group)
+        public static void addListOfVolunteers(List<string> list, GroupDTO group)
         {
+            if (list == null || group == null)
+                return;
             list.ForEach(item =>
             {
                 //user u = new user() { name = item.name, email = item.email };
-                user user1 = db.users.FirstOrDefault(u => u.email == item.email);
+                user user1 = db.users.FirstOrDefault(u => u.email == item);
                 if (user1 == null)
                 {
-                    user1 = new user() { name = item.name, email = item.email };
+                    user1 = new user() { email = item };
                     db.users.Add(user1);
                     db.SaveChanges();
                 }
                 db.user_to_group.Add(new user_to_group() { group_id = group.id, user_id = user1.id, is_manager = false });
                 db.SaveChanges();
-                sendEmail(user1);
+               // sendEmail(user1);
             });
 
         }

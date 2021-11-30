@@ -12,6 +12,7 @@ namespace BL.Convert
     {
         public static GroupDTO ConvertToGroupDTO(group group)
         {
+            if (group == null) return null;
             return new GroupDTO
             {
                 id = group.id,
@@ -23,6 +24,7 @@ namespace BL.Convert
         }
         public static group ConvertToGroup(GroupDTO groupDTO)
         {
+            if (groupDTO == null) return null;
             return new group
             {
                 id = groupDTO.id,

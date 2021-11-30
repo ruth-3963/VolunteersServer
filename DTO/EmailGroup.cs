@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public class UserGroupDTO
+    public class EmailsGroup
     {
-        public List<UserDTO> users { get; set; }
+        public List<string> emails { get; set; }
         public GroupDTO group { get; set; }
 
     }
