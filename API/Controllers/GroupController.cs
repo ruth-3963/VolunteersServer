@@ -27,5 +27,11 @@ namespace API.Controllers
         {
             return GroupBL.getGroupByID(id);
         }
+        [HttpGet]
+        [Route("calcEvents")]
+        public List<EventDTO> CalcEvents(int groupId)
+        {
+            return GroupBL.CalcEvents(groupId);
+        }
     }
 }

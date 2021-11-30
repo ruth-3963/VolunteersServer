@@ -33,6 +33,26 @@ namespace BL
             db.SaveChanges();
         }
 
+        public static List<EventDTO> CalcEvents(int groupId)
+        {
+            group currGroup = db.groups.Find(groupId);
+            if (currGroup == null) return null;
+            List<event_to_user> eventsToUsers = currGroup.event_to_user.ToList();
+            List<@event> groupEvents = currGroup.events1.ToList();
+            if (eventsToUsers == null || groupEvents == null)
+                return null;
+            groupEvents.ForEach(e =>
+            {
+                event_to_user etu = eventsToUsers.FirstOrDefault(item => item.eventId == e.id);
+                if(etu != null)
+                {
+                    e.OwnerId = etu.userId;
+                }
+            });
+            db.SaveChanges();
+            return Convert.EventConverter.ConvertToListOfEventDTO(groupEvents);
+        }
+
         public static GroupDTO getGroupByID(string id)
         {
             group group1 = db.groups.Where(g => g.id.ToString() == id).FirstOrDefault();

@@ -25,7 +25,8 @@ namespace BL
 
         public static List<EventDTO> getEventsByGroup(int GroupId)
         {
-            List<@event> events = db.events.Where(e => e.GroupId == GroupId).ToList();
+            volunteersEntities db1 = new volunteersEntities();
+            List<@event> events = db1.events.Where(e => e.GroupId == GroupId).ToList();
             return BL.Convert.EventConverter.ConvertToListOfEventDTO(events);
         }
 
