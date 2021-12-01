@@ -45,9 +45,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="event_to_user">
+      <EntityTypeMapping TypeName="volunteersModel.event_to_user">
+        <MappingFragment StoreEntitySet="event_to_user">
+          <ScalarProperty Name="groupId" ColumnName="groupId" />
+          <ScalarProperty Name="eventId" ColumnName="eventId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="events">
       <EntityTypeMapping TypeName="volunteersModel.event">
         <MappingFragment StoreEntitySet="events">
+          <ScalarProperty Name="NumOfHouers" ColumnName="NumOfHouers" />
           <ScalarProperty Name="Guid" ColumnName="Guid" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Subject" ColumnName="Subject" />
@@ -55,16 +66,6 @@
           <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
           <ScalarProperty Name="EndTime" ColumnName="EndTime" />
           <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-          <ScalarProperty Name="id" ColumnName="id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="event_to_user">
-      <EntityTypeMapping TypeName="volunteersModel.event_to_user">
-        <MappingFragment StoreEntitySet="event_to_user">
-          <ScalarProperty Name="groupId" ColumnName="groupId" />
-          <ScalarProperty Name="eventId" ColumnName="eventId" />
-          <ScalarProperty Name="userId" ColumnName="userId" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>

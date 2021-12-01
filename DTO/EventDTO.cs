@@ -17,6 +17,7 @@ namespace DTO
         public string Description { get; set; }
         public string Guid { get; set; }
         public List<EventToUserDTO> eventToUserDTO { get; set; }
+        public decimal? NumOfHouers { get; set; } = null;
 
     }
 }

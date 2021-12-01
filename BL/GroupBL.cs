@@ -41,16 +41,17 @@ namespace BL
             List<@event> groupEvents = currGroup.events1.ToList();
             if (eventsToUsers == null || groupEvents == null)
                 return null;
-            groupEvents.ForEach(e =>
-            {
-                event_to_user etu = eventsToUsers.FirstOrDefault(item => item.eventId == e.id);
-                if(etu != null)
-                {
-                    e.OwnerId = etu.userId;
-                }
-            });
-            db.SaveChanges();
-            return Convert.EventConverter.ConvertToListOfEventDTO(groupEvents);
+            return Inlay.InlayEvents.Calc(currGroup,eventsToUsers,groupEvents);
+            //groupEvents.ForEach(e =>
+            //{
+            //    event_to_user etu = eventsToUsers.FirstOrDefault(item => item.eventId == e.id);
+            //    if(etu != null)
+            //    {
+            //        e.OwnerId = etu.userId;
+            //    }
+            //});
+            //db.SaveChanges();
+            //return Convert.EventConverter.ConvertToListOfEventDTO(groupEvents);
         }
 
         public static GroupDTO getGroupByID(string id)

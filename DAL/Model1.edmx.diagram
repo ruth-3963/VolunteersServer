@@ -12,13 +12,13 @@
         <AssociationConnector Association="volunteersModel.fk_manager_to_users" ManuallyRouted="false" />
         <AssociationConnector Association="volunteersModel.FK_userGroupr_to_group" ManuallyRouted="false" />
         <AssociationConnector Association="volunteersModel.FK_userGroup_to_user" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="volunteersModel.event" Width="1.5" PointX="7.625" PointY="0.5" />
-        <AssociationConnector Association="volunteersModel.FK_event_user" />
-        <AssociationConnector Association="volunteersModel.FK_events_group" />
         <EntityTypeShape EntityType="volunteersModel.event_to_user" Width="1.5" PointX="4.75" PointY="7.625" />
         <AssociationConnector Association="volunteersModel.FK_event_to_user" />
-        <AssociationConnector Association="volunteersModel.FK_event_to_user_event" />
         <AssociationConnector Association="volunteersModel.FK_event_to_user_groups" />
+        <EntityTypeShape EntityType="volunteersModel.event" Width="1.5" PointX="6.375" PointY="0.75" />
+        <AssociationConnector Association="volunteersModel.FK_event_to_user_event" />
+        <AssociationConnector Association="volunteersModel.FK_event_user" />
+        <AssociationConnector Association="volunteersModel.FK_events_group" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

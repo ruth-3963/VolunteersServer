@@ -20,7 +20,7 @@ namespace DAL
         public int groupId { get; set; }
     
         public virtual user user { get; set; }
-        public virtual @event @event { get; set; }
         public virtual group group { get; set; }
+        public virtual @event @event { get; set; }
     }
 }

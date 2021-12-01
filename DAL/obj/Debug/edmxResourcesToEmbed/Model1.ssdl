@@ -21,6 +21,7 @@
     <Property Name="Subject" Type="nchar" MaxLength="10" />
     <Property Name="Description" Type="nvarchar(max)" />
     <Property Name="Guid" Type="nvarchar" MaxLength="250" />
+    <Property Name="NumOfHouers" Type="numeric" Precision="17" Scale="6" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="groups">
     <Key>

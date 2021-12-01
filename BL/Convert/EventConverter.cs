@@ -23,6 +23,7 @@ namespace BL.Convert
                 Subject = _event.Subject != null ? _event.Subject : "" ,
                 Description = _event.Description != null ? _event.Description : "",
                 Guid = _event.Guid != null ? _event.Description : "",
+                NumOfHouers = _event.NumOfHouers != null ? _event.NumOfHouers : 0,
                 eventToUserDTO = needDeep? EventToUserConverter.ConvertToListOfEventToUserDTO(_event.event_to_user.ToList()):null
             };
         }

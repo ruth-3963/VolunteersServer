@@ -28,10 +28,11 @@ namespace DAL
         public string Subject { get; set; }
         public string Description { get; set; }
         public string Guid { get; set; }
+        public Nullable<decimal> NumOfHouers { get; set; }
     
-        public virtual user user { get; set; }
-        public virtual group group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<event_to_user> event_to_user { get; set; }
+        public virtual user user { get; set; }
+        public virtual group group { get; set; }
     }
 }
