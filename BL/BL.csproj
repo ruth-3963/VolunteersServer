@@ -83,7 +83,6 @@
     <Compile Include="Convert\UsersToGroupsConverter.cs" />
     <Compile Include="EventBL.cs" />
     <Compile Include="GroupBL.cs" />
-    <Compile Include="Inlay\DictionaryState.cs" />
     <Compile Include="Inlay\InlayEvents.cs" />
     <Compile Include="Inlay\UserHoursState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
