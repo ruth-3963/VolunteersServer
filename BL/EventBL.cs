@@ -10,84 +10,98 @@ namespace BL
 {
     public class EventBL
     {
-        public static volunteersEntities db = new volunteersEntities();
         public static void addEvents(GroupEventDTO groupEvent)
         {
-            groupEvent.events.ForEach(e =>
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                groupEvent.events.ForEach(e =>
                 {
                     e.OwnerId = null;
                     e.GroupId = groupEvent.group.id;
                     db.events.Add(Convert.EventConverter.ConvertToEvent(e));
-                }
-            );
-            db.SaveChanges();
+                });
+                db.SaveChanges();
+            }
         }
 
         public static List<EventDTO> getEventsByGroup(int GroupId)
         {
-            volunteersEntities db1 = new volunteersEntities();
-            List<@event> events = db1.events.Where(e => e.GroupId == GroupId).ToList();
-            return BL.Convert.EventConverter.ConvertToListOfEventDTO(events);
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                List<@event> events = db.events.Where(e => e.GroupId == GroupId).ToList();
+                return BL.Convert.EventConverter.ConvertToListOfEventDTO(events);
+            }
         }
 
         public static void updateEvents(List<EventDTO> events)
         {
-            events.ForEach(e =>
+            using (volunteersEntities db = new volunteersEntities())
             {
-                @event currEvent = db.events.Find(e.id);
-                if (currEvent != null)
+                events.ForEach(e =>
                 {
-                    currEvent.Guid = e.Guid; currEvent.OwnerId = e.OwnerId;
-                    currEvent.Subject = e.Subject; currEvent.Description = e.Description;
-                    currEvent.StartTime = e.StartTime; currEvent.EndTime = e.EndTime;
-                    db.SaveChanges();
-                }
-            });
+                    @event currEvent = db.events.Find(e.id);
+                    if (currEvent != null)
+                    {
+                        currEvent.Guid = e.Guid; currEvent.OwnerId = e.OwnerId;
+                        currEvent.Subject = e.Subject; currEvent.Description = e.Description;
+                        currEvent.StartTime = e.StartTime; currEvent.EndTime = e.EndTime;
+                        db.SaveChanges();
+                    }
+                });
+            }
         }
 
         public static void deleteEvents(List<EventDTO> events)
         {
-
-            events.ForEach(e =>
+            using (volunteersEntities db = new volunteersEntities())
             {
-                @event eventToDelete = db.events.Find(e.id);
-                db.events.Remove(eventToDelete);
-                db.SaveChanges();
-            });
+                events.ForEach(e =>
+                {
+                    @event eventToDelete = db.events.Find(e.id);
+                    db.events.Remove(eventToDelete);
+                    db.SaveChanges();
+                });
+            }
         }
 
         public static List<EventToUserDTO> ListOfEvent(EventsByUserAndGroup data)
         {
-            List<event_to_user> listToConvert = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
-            return Convert.EventToUserConverter.ConvertToListOfEventToUserDTO(listToConvert);
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                List<event_to_user> listToConvert = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
+                return Convert.EventToUserConverter.ConvertToListOfEventToUserDTO(listToConvert);
+            }
         }
 
         public static List<EventToUserDTO> updateUserInEvent(EventsByUserAndGroup data)
         {
-            List<event_to_user> etu = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
-            etu.ForEach(e =>
+            using (volunteersEntities db = new volunteersEntities())
             {
-                if (!data.events.Contains(e.eventId))
+                List<event_to_user> etu = db.event_to_user.Where(val => val.groupId == data.groupId && val.userId == data.userId).ToList();
+                etu.ForEach(e =>
                 {
-                    //remove this event
-                    db.event_to_user.Remove(e);
-                }
-            });
-            //items to add
-            foreach (int id in data.events)
-            {
-                if (etu.FirstOrDefault(e => e.eventId == id) == null)
-                {
-                    db.event_to_user.Add(new event_to_user
+                    if (!data.events.Contains(e.eventId))
                     {
-                        eventId = id,
-                        groupId = data.groupId,
-                        userId = data.userId
-                    });
+                        //remove this event
+                        db.event_to_user.Remove(e);
+                    }
+                });
+                //items to add
+                foreach (int id in data.events)
+                {
+                    if (etu.FirstOrDefault(e => e.eventId == id) == null)
+                    {
+                        db.event_to_user.Add(new event_to_user
+                        {
+                            eventId = id,
+                            groupId = data.groupId,
+                            userId = data.userId
+                        });
+                    }
                 }
+                db.SaveChanges();
+                return ListOfEvent(data);
             }
-            db.SaveChanges();
-            return ListOfEvent(data);
         }
 
 

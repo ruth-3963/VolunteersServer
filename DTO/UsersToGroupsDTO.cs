@@ -8,6 +8,8 @@ namespace DTO
 {
     public class UsersToGroupsDTO
     {
+        public bool? isDeleted;
+
         public int id { get; set; }
         public int? user_id { get; set; }
         public int? group_id { get; set; }

@@ -19,7 +19,6 @@ namespace BL.Convert
                 name = group.name,
                 id_manager = group.id_manager,
                 description = group.description,
-                events = group.events
             };
         }
         public static group ConvertToGroup(GroupDTO groupDTO)
@@ -31,7 +30,6 @@ namespace BL.Convert
                 name = groupDTO.name,
                 id_manager = groupDTO.id_manager,
                 description = groupDTO.description,
-                events = groupDTO.events
             };
         }
         

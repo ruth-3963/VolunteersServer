@@ -57,6 +57,7 @@
           <Property Name="group_id" Type="int" />
           <Property Name="is_manager" Type="bit" />
           <Property Name="color" Type="nvarchar" MaxLength="50" />
+          <Property Name="isDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="users">
           <Key>
@@ -67,6 +68,8 @@
           <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="255" />
           <Property Name="phone" Type="varchar" MaxLength="15" />
+          <Property Name="resetPasswordToken" Type="varchar" MaxLength="50" />
+          <Property Name="reserPasswordExpired" Type="datetime" />
         </EntityType>
         <Association Name="FK_event_to_user">
           <End Role="users" Type="Self.users" Multiplicity="1" />
@@ -140,30 +143,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_userGroup_to_user">
-          <End Role="users" Type="Self.users" Multiplicity="0..1" />
-          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="user_to_group">
-              <PropertyRef Name="user_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_userGroupr_to_group">
-          <End Role="groups" Type="Self.groups" Multiplicity="0..1" />
-          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="groups">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="user_to_group">
-              <PropertyRef Name="group_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="volunteersModelStoreContainer">
           <EntitySet Name="event_to_user" EntityType="Self.event_to_user" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="events" EntityType="Self.events" Schema="dbo" store:Type="Tables" />
@@ -194,14 +173,6 @@
           <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
             <End Role="users" EntitySet="users" />
             <End Role="groups" EntitySet="groups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
-            <End Role="users" EntitySet="users" />
-            <End Role="user_to_group" EntitySet="user_to_group" />
-          </AssociationSet>
-          <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
-            <End Role="groups" EntitySet="groups" />
-            <End Role="user_to_group" EntitySet="user_to_group" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -236,31 +207,34 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
           <Property Name="user_id" Type="Int32" />
           <Property Name="group_id" Type="Int32" />
           <Property Name="is_manager" Type="Boolean" />
           <NavigationProperty Name="group" Relationship="Self.FK_userGroupr_to_group" FromRole="user_to_group" ToRole="groups" />
           <NavigationProperty Name="user" Relationship="Self.FK_userGroup_to_user" FromRole="user_to_group" ToRole="users" />
-          <Property Name="color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="color" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+          <Property Name="isDeleted" Type="Boolean" />
         </EntityType>
         <EntityType Name="user">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+          <Property Name="name" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+          <Property Name="email" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+          <Property Name="password" MaxLength="255" FixedLength="false" Unicode="false" Type="String" />
+          <Property Name="phone" MaxLength="15" FixedLength="false" Unicode="false" Type="String" />
           <NavigationProperty Name="groups" Relationship="Self.fk_manager_to_users" FromRole="users" ToRole="groups" />
           <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroup_to_user" FromRole="users" ToRole="user_to_group" />
           <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user" FromRole="user" ToRole="event_to_user" />
           <NavigationProperty Name="events" Relationship="volunteersModel.FK_event_user" FromRole="user" ToRole="event" />
+          <Property Name="reserPasswordExpired" Precision="3" Type="DateTime" />
+          <Property Name="resetPasswordToken" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="fk_manager_to_users">
-          <End Role="users" Type="Self.user" Multiplicity="1" />
-          <End Role="groups" Type="Self.group" Multiplicity="*" />
+          <End Type="Self.user" Multiplicity="1" Role="users" />
+          <End Type="Self.group" Multiplicity="*" Role="groups" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="id" />
@@ -271,8 +245,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_userGroupr_to_group">
-          <End Role="groups" Type="Self.group" Multiplicity="0..1" />
-          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <End Type="Self.group" Multiplicity="0..1" Role="groups" />
+          <End Type="Self.user_to_group" Multiplicity="*" Role="user_to_group" />
           <ReferentialConstraint>
             <Principal Role="groups">
               <PropertyRef Name="id" />
@@ -283,8 +257,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_userGroup_to_user">
-          <End Role="users" Type="Self.user" Multiplicity="0..1" />
-          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <End Type="Self.user" Multiplicity="0..1" Role="users" />
+          <End Type="Self.user_to_group" Multiplicity="*" Role="user_to_group" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="id" />
@@ -300,21 +274,21 @@
           <EntitySet Name="user_to_group" EntityType="Self.user_to_group" />
           <EntitySet Name="users" EntityType="Self.user" />
           <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
-            <End Role="users" EntitySet="users" />
-            <End Role="groups" EntitySet="groups" />
+            <End EntitySet="users" Role="users" />
+            <End EntitySet="groups" Role="groups" />
           </AssociationSet>
           <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
-            <End Role="groups" EntitySet="groups" />
-            <End Role="user_to_group" EntitySet="user_to_group" />
+            <End EntitySet="groups" Role="groups" />
+            <End EntitySet="user_to_group" Role="user_to_group" />
           </AssociationSet>
           <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
-            <End Role="users" EntitySet="users" />
-            <End Role="user_to_group" EntitySet="user_to_group" />
+            <End EntitySet="users" Role="users" />
+            <End EntitySet="user_to_group" Role="user_to_group" />
           </AssociationSet>
           <EntitySet Name="event_to_user" EntityType="volunteersModel.event_to_user" />
           <AssociationSet Name="FK_event_to_user" Association="volunteersModel.FK_event_to_user">
-            <End Role="user" EntitySet="users" />
-            <End Role="event_to_user" EntitySet="event_to_user" />
+            <End EntitySet="users" Role="user" />
+            <End EntitySet="event_to_user" Role="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_to_user_groups" Association="volunteersModel.FK_event_to_user_groups">
             <End Role="group" EntitySet="groups" />
@@ -326,8 +300,8 @@
             <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_user" Association="volunteersModel.FK_event_user">
-            <End Role="user" EntitySet="users" />
-            <End Role="event" EntitySet="events" />
+            <End EntitySet="users" Role="user" />
+            <End EntitySet="events" Role="event" />
           </AssociationSet>
           <AssociationSet Name="FK_events_group" Association="volunteersModel.FK_events_group">
             <End Role="group" EntitySet="groups" />
@@ -347,8 +321,8 @@
           <NavigationProperty Name="event" Relationship="volunteersModel.FK_event_to_user_event" FromRole="event_to_user" ToRole="event" />
         </EntityType>
         <Association Name="FK_event_to_user">
-          <End Type="volunteersModel.user" Role="user" Multiplicity="1" />
-          <End Type="volunteersModel.event_to_user" Role="event_to_user" Multiplicity="*" />
+          <End Type="volunteersModel.user" Multiplicity="1" Role="user" />
+          <End Type="volunteersModel.event_to_user" Multiplicity="*" Role="event_to_user" />
           <ReferentialConstraint>
             <Principal Role="user">
               <PropertyRef Name="id" />
@@ -400,8 +374,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_event_user">
-          <End Type="volunteersModel.user" Role="user" Multiplicity="0..1" />
-          <End Type="volunteersModel.event" Role="event" Multiplicity="*" />
+          <End Type="volunteersModel.user" Multiplicity="0..1" Role="user" />
+          <End Type="volunteersModel.event" Multiplicity="*" Role="event" />
           <ReferentialConstraint>
             <Principal Role="user">
               <PropertyRef Name="id" />
@@ -454,6 +428,7 @@
           <EntitySetMapping Name="user_to_group">
             <EntityTypeMapping TypeName="volunteersModel.user_to_group">
               <MappingFragment StoreEntitySet="user_to_group">
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
                 <ScalarProperty Name="color" ColumnName="color" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
@@ -465,6 +440,8 @@
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="volunteersModel.user">
               <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="resetPasswordToken" ColumnName="resetPasswordToken" />
+                <ScalarProperty Name="reserPasswordExpired" ColumnName="reserPasswordExpired" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="email" ColumnName="email" />

@@ -13,6 +13,6 @@ namespace DTO
         public string name { get; set; }
         public int id_manager { get; set; }
         public string description { get; set; }
-        public string events { get; set; }
+        public List<EventDTO> events { get; set; }
     }
 }

@@ -19,7 +19,9 @@ namespace BL.Convert
                 name = user.name,
                 email = user.email,
                 password = user.password,
-                phone = user.phone
+                phone = user.phone,
+                resetPasswordToken = user.resetPasswordToken,
+                reserPasswordExpired = user.reserPasswordExpired
             };
         }
         public static user ConvertToUser(UserDTO userDTO)
@@ -31,7 +33,9 @@ namespace BL.Convert
                 name = userDTO.name,
                 email = userDTO.email,
                 password = userDTO.password,
-                phone = userDTO.phone
+                phone = userDTO.phone,
+                reserPasswordExpired = userDTO.reserPasswordExpired,
+                resetPasswordToken = userDTO.resetPasswordToken
             };
         }
     }

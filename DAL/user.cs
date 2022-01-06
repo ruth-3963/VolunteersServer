@@ -28,6 +28,8 @@ namespace DAL
         public string email { get; set; }
         public string password { get; set; }
         public string phone { get; set; }
+        public Nullable<System.DateTime> reserPasswordExpired { get; set; }
+        public string resetPasswordToken { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<group> groups { get; set; }

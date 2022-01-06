@@ -19,6 +19,7 @@ namespace BL.Convert
                 group_id = userToGroup.group_id,
                 is_manager = userToGroup.is_manager,
                 color = userToGroup.color,
+                isDeleted = userToGroup.isDeleted,
                 group = GroupConverter.ConvertToGroupDTO(userToGroup.group)
             };
         }
@@ -32,6 +33,7 @@ namespace BL.Convert
                 group_id = userToGroupDTO.group_id,
                 is_manager = userToGroupDTO.is_manager,
                 color = userToGroupDTO.color,
+                isDeleted = userToGroupDTO.isDeleted,
                 group = GroupConverter.ConvertToGroup(userToGroupDTO.group)
             };
         }

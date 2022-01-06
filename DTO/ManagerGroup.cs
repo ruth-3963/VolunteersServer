@@ -12,5 +12,6 @@ namespace DTO
         public string name { get; set; }
         public string mName { get; set; }
         public string mEmail { get; set; }
+        public string color { get; set; }
     }
 }

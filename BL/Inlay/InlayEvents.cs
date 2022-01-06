@@ -14,12 +14,12 @@ namespace BL.Inlay
         {
             using (volunteersEntities entities = new volunteersEntities())
             {
-                Dictionary<user, UserHoursState> usersState = UserHoursState.createListOfUsersHourState(currGroup);
+                Dictionary<user, UserHoursState> usersState = UserHoursState.createListOfUsersHourState(currGroup,groupEvents);
                 if (usersState == null) return null;
                 //create array with event and num of volunteers that agree to volunteer
                 Dictionary<@event, List<user>> eventWithListOfUsers = createEventWithListOfUsersDictionary(groupEvents);
                 //average hours
-                decimal average = currGroup.events1.Sum(elem => elem.NumOfHouers).GetValueOrDefault();
+                decimal average = groupEvents.Sum(elem => elem.NumOfHouers).GetValueOrDefault();
                 if (average > 0)
                     average = average / currGroup.user_to_group.Count();
                 inlayToUsersWithLessThanAverage(eventWithListOfUsers,usersState,average);
