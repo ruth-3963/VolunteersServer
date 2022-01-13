@@ -22,16 +22,21 @@ namespace API.Controllers
         
        [Route("AddUsers")]
        [HttpPost]
-        public void Post([FromBody] EmailsGroup emailsGroup)
+        public List<string> Post([FromBody] EmailsGroup emailsGroup)
         {
-         
-            UserBL.addListOfVolunteers(emailsGroup.emails, emailsGroup.group);
-            
+            return UserBL.addListOfVolunteers(emailsGroup.emails, emailsGroup.group);
         }
         //GET api/User
         public UserDTO Get(string email,string password)
         {
             return UserBL.SignIn(email,password);
         }
+        [HttpPut]
+        public UserDTO PUT(int id,[FromBody]UserDTO userDto)
+        {
+            return UserBL.Update(userDto,id);
+        }
+      
     }
+
 }

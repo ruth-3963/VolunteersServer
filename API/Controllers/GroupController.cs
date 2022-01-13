@@ -29,9 +29,15 @@ namespace API.Controllers
         }
         [HttpGet]
         [Route("calcEvents")]
-        public List<EventDTO> CalcEvents(int groupId)
+        public List<EventDTO> CalcEvents(int groupId ,List<EventDTO> events)
         {
-            return GroupBL.CalcEvents(groupId);
+            return GroupBL.CalcEvents(groupId,events);
+        }
+        [HttpGet]
+        [Route("getAllUsersColors")]
+        public List<string> getAllUsersColors(int groupId)
+        {
+            return GroupBL.getAllUsersColors(groupId);
         }
     }
 }
