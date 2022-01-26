@@ -10,6 +10,7 @@ namespace DTO
     {
         public List<string> emails { get; set; }
         public GroupDTO group { get; set; }
-
+        public string html { get; set; }
+        public string subject { get; set; }
     }
 }

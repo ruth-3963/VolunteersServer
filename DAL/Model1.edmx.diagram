@@ -7,7 +7,7 @@
       <Diagram DiagramId="20937d50ac494e728da9a5b52366b078" Name="Diagram1">
         <EntityTypeShape EntityType="volunteersModel.group" Width="1.5" PointX="4.125" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="volunteersModel.sysdiagram" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="volunteersModel.user_to_group" PointX="7.375" PointY="4.875" Width="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="volunteersModel.user_to_group" PointX="7.375" PointY="5.375" Width="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="volunteersModel.user" PointX="1.875" PointY="3.75" Width="1.5" IsExpanded="true" />
         <AssociationConnector ManuallyRouted="false" Association="volunteersModel.fk_manager_to_users" />
         <AssociationConnector ManuallyRouted="false" Association="volunteersModel.FK_userGroupr_to_group" />

@@ -66,6 +66,10 @@ namespace BL
                 db.SaveChanges();
                 string from = "ostrovruti@gmail.com";
                 string to = "mo9080755@gmail.com";
+                string body = "To reset password please enter to this link " +
+                    "http://localhost:3000/signup/" +
+                    currUser.resetPasswordToken.ToString() +
+                    " and recreate password";
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
@@ -76,12 +80,19 @@ namespace BL
                 {
                     From = new MailAddress(from),
                     Subject = "reset password",
-                    Body = currUser.resetPasswordToken.ToString(),
+                    Body =  currUser.resetPasswordToken.ToString(),
                     IsBodyHtml = true,
                 };
                 mailMessage.To.Add(to);
-                //smtpClient.Send(mailMessage);
-                return "recovery email sent";
+                try
+                {
+                    smtpClient.Send(mailMessage);
+                    return "recovery email sent";
+                }
+                catch
+                {
+                    return "error email sent";
+                }               
             }
         }
     }

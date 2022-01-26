@@ -24,7 +24,7 @@ namespace API.Controllers
        [HttpPost]
         public List<string> Post([FromBody] EmailsGroup emailsGroup)
         {
-            return UserBL.addListOfVolunteers(emailsGroup.emails, emailsGroup.group);
+            return UserBL.addListOfVolunteers(emailsGroup);
         }
         //GET api/User
         public UserDTO Get(string email,string password)

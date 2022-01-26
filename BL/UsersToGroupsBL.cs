@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL;
+using System.Data.Entity.Validation;
+
 namespace BL
 {
     public class UsersToGroupsBL
@@ -38,6 +40,55 @@ namespace BL
             }
         }
 
+        public static void RemoveUser(UsersToGroupsDTO userToGroupDto)
+        {
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                user_to_group userToGroup =
+                    db.user_to_group.FirstOrDefault(ug => ug.user_id == userToGroupDto.user_id &&
+                                                          ug.group_id == userToGroupDto.group_id);
+                if (userToGroup == null)
+                {
+                    return;
+                }
+                userToGroup.isDeleted = true;
+                try
+                {
+                    db.SaveChanges();
+                    removeFromEvents(userToGroup);
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    throw new DbEntityValidationException(ex.Message);
+                }
+            }
+        }
+        private static void removeFromEvents(user_to_group userToGroup)
+        {
+            //send email to manager with this events
+            using(volunteersEntities db = new volunteersEntities())
+            {
+                List<@event> userEvents =
+                    db.events.Where(e => e.OwnerId == userToGroup.user_id &&
+                                    e.GroupId == userToGroup.group_id &&
+                                    DateTime.Compare(e.StartTime,DateTime.Now)  > 0)
+                             .ToList();
+
+                userEvents.ForEach(e =>
+                {
+                    e.OwnerId = null;
+                });
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+
+        }
         public static List<OwnerData> getOwnerData(int groupId)
         {
             using (volunteersEntities db = new volunteersEntities())
@@ -54,7 +105,8 @@ namespace BL
                             {
                                 OwnerColor = ug.color,
                                 Id = ug.user_id,
-                                OwnerText = ug.user.name + "  " + ug.user.email
+                                OwnerText = ug.user.name + "  " + ug.user.email,
+                                IsDeleted = ug.isDeleted
                             });
                         }
                     });

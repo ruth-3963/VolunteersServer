@@ -10,6 +10,7 @@ using DAL;
 using DTO;
 using System.Reflection;
 using System;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Web.Helpers;
 namespace BL
@@ -44,6 +45,23 @@ namespace BL
             }
         }
 
+        public static void ConvertToString()
+        {
+            using(volunteersEntities db = new volunteersEntities()) 
+            {
+                List<user_to_group> list = db.user_to_group.ToList();
+                list.ForEach(e =>
+                {
+                    if(e.color != null)
+                    {
+                        e.color = "#" + e.color;
+                    }
+                    
+                 });
+                db.SaveChanges();
+            }
+        }
+
         public static UserDTO Update(UserDTO userDto, int id)
         {
             using (volunteersEntities db = new volunteersEntities())
@@ -60,21 +78,21 @@ namespace BL
                     db.SaveChanges();
                     return Convert.UserConverter.ConvertToUserDTO(userToUpdate);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     throw new Exception(e.Message);
                 }
             }
         }
 
-        public static List<string> addListOfVolunteers(List<string> list, GroupDTO group)
+        public static List<string> addListOfVolunteers(EmailsGroup emailsGroup)
         {
             using (volunteersEntities db = new volunteersEntities())
             {
-                if (list == null || group == null)
+                if (emailsGroup.emails == null || emailsGroup.group == null)
                     return null;
                 List<string> emails = new List<string>();
-                list.ForEach(item =>
+                emailsGroup.emails.ForEach(item =>
                 {
                     //user u = new user() { name = item.name, email = item.email };
                     user user1 = db.users.FirstOrDefault(u => u.email == item);
@@ -84,9 +102,13 @@ namespace BL
                         db.users.Add(user1);
                         db.SaveChanges();
                     }
-                    user_to_group newUserToGroup = new user_to_group() { group_id = group.id, user_id = user1.id, is_manager = false };
+                    user_to_group newUserToGroup = new user_to_group() { group_id = emailsGroup.group.id, user_id = user1.id, is_manager = false };
                     db.user_to_group.Add(newUserToGroup);
-                    emails.Add(user1.email);
+                    if (sendEmail(user1, emailsGroup))
+                    {
+                        emails.Add(user1.email);
+                    }
+
 
                 });
                 db.SaveChanges();
@@ -105,25 +127,36 @@ namespace BL
             }
         }
 
-        private static void sendEmail(user user)
+        private static bool sendEmail(user user1, EmailsGroup emailsGroup)
         {
             string from = "ostrovruti@gmail.com";
-            string to = "mo9080755@gmail.com";
+            string to = user1.email;
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
                 Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
                 EnableSsl = true,
             };
+            emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signup", "http://localhost:3000/signup?email=" + user1.email + "/");
+            emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signin", "http://localhost:3000/signin?email=" + user1.email + "/");
+
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(from),
-                Subject = "subject",
-                Body = "<h1>Hello</h1>",
+                Subject = emailsGroup.subject,
+                Body = emailsGroup.html,
                 IsBodyHtml = true,
             };
             mailMessage.To.Add(to);
-            //natasmtpClient.Send(mailMessage);
+            try
+            {
+                smtpClient.Send(mailMessage);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

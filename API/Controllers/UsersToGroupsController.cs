@@ -28,6 +28,11 @@ namespace API.Controllers
         {
             return BL.UsersToGroupsBL.getOwnerData(groupId);
         }
-        
+        [HttpPost]
+        [Route("removeUserFromGroup")]
+        public void RemoveUser(UsersToGroupsDTO userToGroup)
+        {
+            BL.UsersToGroupsBL.RemoveUser(userToGroup);
+        }
     }
 }

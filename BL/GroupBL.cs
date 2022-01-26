@@ -116,7 +116,7 @@ namespace BL
                         (g, u) => new ManagerGroup { id = g.id, name = g.name, mName = u.name, mEmail = u.email ,
                             color = g.user_to_group.FirstOrDefault(utg => utg.user_id == id).color})
                         .Where(groupWithManager =>       
-                        db.user_to_group.Any(ug => ug.group_id == groupWithManager.id && ug.user_id == id));
+                        db.user_to_group.Any(ug => ug.group_id == groupWithManager.id && ug.user_id == id && ug.isDeleted != true));
                 return lo.ToList();
             }
 
