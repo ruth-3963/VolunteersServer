@@ -11,5 +11,6 @@ namespace DTO
         public int? Id { get; set; } = 0;
         public string OwnerText { get; set; }
         public string OwnerColor { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }
