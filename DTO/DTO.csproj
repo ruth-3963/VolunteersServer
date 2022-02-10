@@ -55,6 +55,7 @@
     <Compile Include="EmailGroup.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="UsersToGroupsDTO.cs" />
+    <Compile Include="UserToGroupMoreDetails.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages - Copy.config" />

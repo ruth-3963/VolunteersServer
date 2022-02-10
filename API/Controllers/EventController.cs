@@ -17,15 +17,17 @@ namespace API.Controllers
     {
         public List<EventDTO> Get(int id)
         {
-            return BL.EventBL.getEventsByGroup(id);
+            return EventBL.getEventsByGroup(id);
         }
         public void Put([FromBody] GroupEventDTO groupEvent)
         {
-            BL.GroupBL.AddEventsToGroup(groupEvent.group, groupEvent.events);
+            GroupBL.AddEventsToGroup(groupEvent.group, groupEvent.events);
         }
-        public void Post([FromBody] GroupEventDTO data)
+        [HttpPost]
+        [Route("SaveEvents/{groupId}")]
+        public void SaveEvents(int groupId,[FromBody] List<EventDTO> updateNewEvents)
         {
-            EventBL.addEvents(data);
+            EventBL.addEvents(groupId, updateNewEvents);
         }
         [HttpPut]
         [Route("UpdatetUserArr")]
@@ -43,10 +45,31 @@ namespace API.Controllers
             }
         }
         [HttpDelete]
-        public void Delete([FromBody] List<EventDTO> data)
+        [Route("deleteEvents")]
+        public void Delete(List<EventDTO> newDel)
         {
-            BL.EventBL.deleteEvents(data);
-            Console.WriteLine(data);
+            BL.EventBL.deleteEvents(newDel);
         }
+        [HttpPost]
+        [Route("api/Event/specialSave/{buttonId}")]
+        public bool specialSave(string buttonId,[FromBody] GroupDTO group)
+        {
+            return EventBL.SendAppropriateEmail(buttonId,group);
+            
+        }
+        [HttpPut]
+        [Route("api/Event")]
+        public void SetDescription(int eventId,string description)
+        {
+            EventBL.SetDescription(eventId,description);
+        }
+        [HttpPost]
+        [Route("inlay/{userId}")]
+        public bool InlayUser(int userId,[FromBody] EventDTO data)
+        {
+            return EventBL.InlayUser(userId, data);
+        }
+
     }
 }
+

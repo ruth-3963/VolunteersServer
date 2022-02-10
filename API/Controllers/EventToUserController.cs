@@ -15,7 +15,11 @@ namespace API.Controllers
     {
         public List<EventToUserDTO> Post([FromBody] EventsByUserAndGroup data)
         {
-            return EventBL.updateUserInEvent(data);
+            return EventToUserBL.updateUserInEvent(data);
+        }
+        public List<EventDTO> Get(int userId,int groupId)
+        {
+            return EventToUserBL.GetEventToChooseEvents(userId, groupId);
         }
     }
 }

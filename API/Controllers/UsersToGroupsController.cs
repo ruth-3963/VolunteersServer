@@ -6,12 +6,24 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DTO;
+using BL;
 namespace API.Controllers
 {
 
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersToGroupsController : ApiController
     {
+        public List<UserToGroupMoreDetails> Get(int groupId)
+        {
+            return UsersToGroupsBL.GetUsersByGroup(groupId);
+        }
+
+        [HttpGet]
+        [Route("group/getConfirmManagerGroups/{userId}")]
+        public ManagerGroup GetConfirmManagerGroups(int userId)
+        {
+            return UsersToGroupsBL.GetConfirmManagerGroups(userId);
+        }
         public UsersToGroupsDTO Get(int groupId,int userId)
         {
             return BL.UsersToGroupsBL.getByUserAndGroup(groupId,userId);
@@ -20,7 +32,7 @@ namespace API.Controllers
        //update color
        public UsersToGroupsDTO PUT([FromBody] UsersToGroupsDTO data)
         {
-            return BL.UsersToGroupsBL.UpdateColor(data);
+            return BL.UsersToGroupsBL.UpdateSettings(data);
         }
         [Route("getOwnerData")]
         [HttpGet]

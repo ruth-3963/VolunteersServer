@@ -31,6 +31,8 @@ namespace BL.Inlay
                             OrderBy(us => us.Value.Left).
                             ThenByDescending(us => us.Value.Taken).
                             ToDictionary(pair => pair.Key, pair => pair.Value);
+                    if (usersStateToCurrEvent.Count == 0)
+                        break;
                     @event eventToSave = entities.events.FirstOrDefault(element => element.id == entry.Key.id);
                     user userWithMinHours = usersStateToCurrEvent.FirstOrDefault(us => !us.Value.IsMoreAvg).Key;
                     if (userWithMinHours == null)

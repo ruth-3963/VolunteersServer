@@ -27,9 +27,9 @@ namespace API.Controllers
         {
             return GroupBL.getGroupByID(id);
         }
-        [HttpGet]
-        [Route("calcEvents")]
-        public List<EventDTO> CalcEvents(int groupId ,List<EventDTO> events)
+        [HttpPost]
+        [Route("calcEvents/{groupId}")]
+        public List<EventDTO> CalcEvents(int groupId ,[FromBody]List<EventDTO> events)
         {
             return GroupBL.CalcEvents(groupId,events);
         }
@@ -38,6 +38,18 @@ namespace API.Controllers
         public List<string> getAllUsersColors(int groupId)
         {
             return GroupBL.getAllUsersColors(groupId);
+        }
+        [HttpPost]
+        [Route("group/setManager/{id}")]
+        public void SetManager(int id,[FromBody]ManagerGroup group)
+        {
+            GroupBL.SetManager(id, group);
+        }
+        [HttpPost]
+        [Route("group/newManagerAnswer/{isAgree}")]
+        public void NewManagerAnswer(bool isAgree, [FromBody] UsersToGroupsDTO userToGroup)
+        {
+            GroupBL.SetManager(isAgree, userToGroup);
         }
     }
 }

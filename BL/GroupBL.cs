@@ -9,6 +9,8 @@ using BL.Convert;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Mail;
+using System.Net;
 
 namespace BL
 {
@@ -45,7 +47,7 @@ namespace BL
                 List<string> colors = new List<string>();
                 _group.user_to_group.ToList().ForEach(utg =>
                 {
-                    if(utg.color != null)
+                    if (utg.color != null)
                     {
                         colors.Add(utg.color);
                     }
@@ -55,7 +57,92 @@ namespace BL
 
         }
 
-        public static List<EventDTO> CalcEvents(int groupId,List<EventDTO> events)
+        public static void SetManager(bool isAgree, UsersToGroupsDTO userToGroup)
+        {
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                string body = "";
+                string subject = "";
+                user_to_group newManager =
+                       db.user_to_group.FirstOrDefault(ug => ug.group_id == userToGroup.group_id && ug.user_id == userToGroup.user_id);
+                user_to_group oldManager =
+                    db.user_to_group.FirstOrDefault(ug => ug.is_manager == true);
+                group currGroup = db.groups.FirstOrDefault(g => g.id == userToGroup.group_id);
+                string userName = newManager.user.name;
+                string userEmail = newManager.user.email;
+                string userValue = userName != null ? userName :
+                                   "user with email" + userEmail;
+                if (isAgree)
+                {
+                    newManager.is_manager = true;
+                    oldManager.is_manager = false;
+                    currGroup.id_manager = newManager.user.id;
+                    subject = userValue + " agree to manage " + currGroup.name + " group";
+                    body = subject + "/n now you are regular user in group/nand"
+                        + newManager.user.name + " is the manager";
+                }
+                else
+                {
+                    subject = userValue + " not agree to manage " + currGroup.name + " group";
+                    body = subject + "/n so you left the manager";
+                }
+                newManager.confirm_manage = false;
+                db.SaveChanges();
+
+                MailMessage message = new MailMessage()
+                {
+                    From = new MailAddress("ostrovruti@gmail.com"),
+                    Subject = subject,
+                    Body = body
+                };
+                message.To.Add(oldManager.user.email);
+                try
+                {
+                   // SendEmail(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        public static void SetManager(int newManagerId, ManagerGroup Mgroup)
+        {
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                user newManager = db.users.FirstOrDefault(u => u.id == newManagerId);
+                group DBgroup = db.groups.FirstOrDefault(g => g.id == Mgroup.id);
+                if (newManager == null || DBgroup == null)
+                    return;
+
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("ostrovruti@gmail.com"),
+                    Subject = "manage " + DBgroup.name + " group",
+                    Body = DBgroup.user.name + "accept that you manage " + DBgroup.name +
+                    " group please <a href='https://localhost:3000'>enter to everyOneToOne</a> " +
+                    "to send your decide",
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(newManager.email);
+                try
+                {
+                    //SendEmail(mailMessage);
+                    user_to_group managerToGroup =
+                        db.user_to_group.FirstOrDefault(ug => ug.user_id == newManager.id && ug.group_id == DBgroup.id);
+                    managerToGroup.confirm_manage = true;
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        public static List<EventDTO> CalcEvents(int groupId, List<EventDTO> events)
         {
             using (volunteersEntities db = new volunteersEntities())
             {
@@ -105,7 +192,7 @@ namespace BL
                     is_manager = true
                 });
                 db.SaveChanges();
-                return Convert.UsersToGroupsConverter.ConvertToUserToGroupDTO(userToGroup);
+                return UsersToGroupsConverter.ConvertToUserToGroupDTO(userToGroup);
             }
         }
         public static List<ManagerGroup> getGroupsByUserWithManeger(int id)
@@ -113,13 +200,38 @@ namespace BL
             using (volunteersEntities db = new volunteersEntities())
             {
                 var lo = db.groups.Join(db.users, g => g.id_manager, u => u.id,
-                        (g, u) => new ManagerGroup { id = g.id, name = g.name, mName = u.name, mEmail = u.email ,
-                            color = g.user_to_group.FirstOrDefault(utg => utg.user_id == id).color})
-                        .Where(groupWithManager =>       
+                        (g, u) => new ManagerGroup
+                        {
+                            id = g.id,
+                            name = g.name,
+                            mName = u.name,
+                            mEmail = u.email,
+                            color = g.user_to_group.FirstOrDefault(utg => utg.user_id == id).color
+                        })
+                        .Where(groupWithManager =>
                         db.user_to_group.Any(ug => ug.group_id == groupWithManager.id && ug.user_id == id && ug.isDeleted != true));
                 return lo.ToList();
             }
 
+        }
+        public static bool SendEmail(MailMessage message)
+        {
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
+                EnableSsl = true,
+            };
+            try
+            {
+                smtpClient.Send(message);
+                return true;
+            }
+            catch (SmtpException smtpExeption)
+            {
+                Console.WriteLine(smtpExeption.Message);
+                return false;
+            }
         }
     }
 }

@@ -26,6 +26,8 @@ namespace DAL
         public Nullable<bool> is_manager { get; set; }
         public string color { get; set; }
         public Nullable<bool> isDeleted { get; set; }
+        public Nullable<bool> confirm_manage { get; set; }
+        public Nullable<double> reminder { get; set; }
     
         public virtual group group { get; set; }
         public virtual user user { get; set; }

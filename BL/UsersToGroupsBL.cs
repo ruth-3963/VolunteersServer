@@ -21,7 +21,41 @@ namespace BL
             }
         }
 
-        public static UsersToGroupsDTO UpdateColor(UsersToGroupsDTO userToGroup)
+        public static ManagerGroup GetConfirmManagerGroups(int userId)
+        {
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                user_to_group groupToConfirm =
+                    db.user_to_group.FirstOrDefault(ug => ug.user_id == userId && ug.confirm_manage == true);
+                if (groupToConfirm == null)
+                    return null;
+                return new ManagerGroup
+                {
+                    id = (int)groupToConfirm.group_id,
+                    name = groupToConfirm.group.name,
+                    mEmail = groupToConfirm.group.user.email,
+                    mName = groupToConfirm.group.user.name,
+                };
+            }
+        }
+
+        public static List<UserToGroupMoreDetails> GetUsersByGroup(int groupId)
+        {
+            using (volunteersEntities db = new volunteersEntities())
+            {
+                List<UserToGroupMoreDetails> users =
+                    db.user_to_group.AsEnumerable().Where(ug => ug.group_id == groupId)
+                                    .Select(ug => 
+                                    new UserToGroupMoreDetails(){
+                                        user = Convert.UserConverter.ConvertToUserDTO(ug.user),
+                                        color = ug.color,
+                                        isDeleted = ug.isDeleted == true
+                                    }).ToList();
+                return users;
+            }
+        }
+
+        public static UsersToGroupsDTO UpdateSettings(UsersToGroupsDTO userToGroup)
         {
             using (volunteersEntities db = new volunteersEntities())
             {
@@ -30,6 +64,7 @@ namespace BL
                 try
                 {
                     utg.color = userToGroup.color;
+                    utg.reminder = userToGroup.reminder;
                     db.SaveChanges();
                 }
                 catch (Exception e)
@@ -66,12 +101,12 @@ namespace BL
         private static void removeFromEvents(user_to_group userToGroup)
         {
             //send email to manager with this events
-            using(volunteersEntities db = new volunteersEntities())
+            using (volunteersEntities db = new volunteersEntities())
             {
                 List<@event> userEvents =
                     db.events.Where(e => e.OwnerId == userToGroup.user_id &&
                                     e.GroupId == userToGroup.group_id &&
-                                    DateTime.Compare(e.StartTime,DateTime.Now)  > 0)
+                                    DateTime.Compare(e.StartTime, DateTime.Now) > 0)
                              .ToList();
 
                 userEvents.ForEach(e =>
@@ -82,7 +117,7 @@ namespace BL
                 {
                     db.SaveChanges();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw new Exception(ex.Message);
                 }

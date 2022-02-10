@@ -67,7 +67,7 @@ namespace BL
                 string from = "ostrovruti@gmail.com";
                 string to = "mo9080755@gmail.com";
                 string body = "To reset password please enter to this link " +
-                    "http://localhost:3000/signup/" +
+                    "http://localhost:3000/resetPassword/" +
                     currUser.resetPasswordToken.ToString() +
                     " and recreate password";
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
@@ -80,7 +80,7 @@ namespace BL
                 {
                     From = new MailAddress(from),
                     Subject = "reset password",
-                    Body =  currUser.resetPasswordToken.ToString(),
+                    Body = body,
                     IsBodyHtml = true,
                 };
                 mailMessage.To.Add(to);

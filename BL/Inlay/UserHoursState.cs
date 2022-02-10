@@ -22,12 +22,14 @@ namespace BL.Inlay
             {
                 Dictionary<user, UserHoursState> state = new Dictionary<user, UserHoursState>();
                 List<user> users = currGroup.user_to_group.Select(ug => ug.user).ToList();
-
+                List<int> groupEventsIds = groupEvents.Select(ge => ge.id).ToList();
                 users.ForEach(u =>
                 {
-                    List<@event> usersEvents = db.event_to_user
-                    .Where(etu => etu.groupId == currGroup.id && etu.userId == u.id && groupEvents.Select(e => e.id).Contains(etu.eventId))
-                    .Select(etu => etu.@event).ToList();
+                    List<@event> usersEvents1 = db.event_to_user.Select(ut => ut.@event).ToList();
+                    List<@event> usersEvents = db.event_to_user.
+                    Where(etu => etu.groupId == currGroup.id && etu.userId == u.id && groupEventsIds.Contains(etu.eventId)).
+                    Select(etu => etu.@event).ToList();
+                   
                     if (usersEvents.Count > 0)
                     {
                         decimal left = usersEvents.Sum(ue => ue.NumOfHouers).Value;

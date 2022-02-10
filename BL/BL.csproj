@@ -98,11 +98,13 @@
     <Compile Include="Convert\UserConverter.cs" />
     <Compile Include="Convert\UsersToGroupsConverter.cs" />
     <Compile Include="EventBL.cs" />
+    <Compile Include="EventToUserBL.cs" />
     <Compile Include="GroupBL.cs" />
     <Compile Include="Inlay\InlayEvents.cs" />
     <Compile Include="Inlay\UserHoursState.cs" />
     <Compile Include="LoginBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScheduleFunction.cs" />
     <Compile Include="UserBL.cs" />
     <Compile Include="UsersToGroupsBL.cs" />
   </ItemGroup>

@@ -4,37 +4,37 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="volunteersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+    <Schema Namespace="volunteersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="event_to_user">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="userId" Nullable="false" Type="int" />
-          <Property Name="eventId" Nullable="false" Type="int" />
-          <Property Name="groupId" Nullable="false" Type="int" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="eventId" Type="int" Nullable="false" />
+          <Property Name="groupId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="events">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="StartTime" Nullable="false" Type="datetime" />
-          <Property Name="EndTime" Nullable="false" Type="datetime" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
           <Property Name="OwnerId" Type="int" />
-          <Property Name="GroupId" Nullable="false" Type="int" />
-          <Property Name="Subject" MaxLength="10" Type="nchar" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="Guid" MaxLength="250" Type="nvarchar" />
-          <Property Name="NumOfHouers" Precision="17" Scale="6" StoreGeneratedPattern="Computed" Type="numeric" />
+          <Property Name="Guid" Type="nvarchar" MaxLength="250" />
+          <Property Name="NumOfHouers" Type="numeric" Precision="17" Scale="6" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="groups">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="name" Nullable="false" MaxLength="50" Type="varchar" />
-          <Property Name="id_manager" Nullable="false" Type="int" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="id_manager" Type="int" Nullable="false" />
           <Property Name="description" Type="varchar(max)" />
           <Property Name="events" Type="varchar(max)" />
         </EntityType>
@@ -42,9 +42,9 @@
           <Key>
             <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="name" Nullable="false" MaxLength="128" Type="nvarchar" />
-          <Property Name="principal_id" Nullable="false" Type="int" />
-          <Property Name="diagram_id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
@@ -52,28 +52,30 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="user_id" Type="int" />
           <Property Name="group_id" Type="int" />
           <Property Name="is_manager" Type="bit" />
-          <Property Name="color" MaxLength="50" Type="nvarchar" />
+          <Property Name="color" Type="nvarchar" MaxLength="50" />
           <Property Name="isDeleted" Type="bit" />
+          <Property Name="confirm_manage" Type="bit" />
+          <Property Name="reminder" Type="float" />
         </EntityType>
         <EntityType Name="users">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
-          <Property Name="name" MaxLength="50" Type="varchar" />
-          <Property Name="email" Nullable="false" MaxLength="50" Type="varchar" />
-          <Property Name="password" MaxLength="255" Type="varchar" />
-          <Property Name="phone" MaxLength="15" Type="varchar" />
-          <Property Name="resetPasswordToken" MaxLength="50" Type="varchar" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" />
+          <Property Name="phone" Type="varchar" MaxLength="15" />
+          <Property Name="resetPasswordToken" Type="varchar" MaxLength="50" />
           <Property Name="reserPasswordExpired" Type="datetime" />
         </EntityType>
         <Association Name="FK_event_to_user">
-          <End Type="Self.users" Multiplicity="1" Role="users" />
-          <End Type="Self.event_to_user" Multiplicity="*" Role="event_to_user" />
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="id" />
@@ -84,8 +86,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_event_to_user_event">
-          <End Type="Self.events" Multiplicity="1" Role="events" />
-          <End Type="Self.event_to_user" Multiplicity="*" Role="event_to_user" />
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="events">
               <PropertyRef Name="id" />
@@ -96,8 +98,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_event_to_user_groups">
-          <End Type="Self.groups" Multiplicity="1" Role="groups" />
-          <End Type="Self.event_to_user" Multiplicity="*" Role="event_to_user" />
+          <End Role="groups" Type="Self.groups" Multiplicity="1" />
+          <End Role="event_to_user" Type="Self.event_to_user" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="groups">
               <PropertyRef Name="id" />
@@ -108,8 +110,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_event_user">
-          <End Type="Self.users" Multiplicity="0..1" Role="users" />
-          <End Type="Self.events" Multiplicity="*" Role="events" />
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="id" />
@@ -120,8 +122,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_events_group">
-          <End Type="Self.groups" Multiplicity="1" Role="groups" />
-          <End Type="Self.events" Multiplicity="*" Role="events" />
+          <End Role="groups" Type="Self.groups" Multiplicity="1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="groups">
               <PropertyRef Name="id" />
@@ -132,8 +134,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_manager_to_users">
-          <End Type="Self.users" Multiplicity="1" Role="users" />
-          <End Type="Self.groups" Multiplicity="*" Role="groups" />
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="groups" Type="Self.groups" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="id" />
@@ -151,28 +153,28 @@
           <EntitySet Name="user_to_group" EntityType="Self.user_to_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_event_to_user" Association="Self.FK_event_to_user">
-            <End EntitySet="users" Role="users" />
-            <End EntitySet="event_to_user" Role="event_to_user" />
+            <End Role="users" EntitySet="users" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_to_user_event" Association="Self.FK_event_to_user_event">
-            <End EntitySet="events" Role="events" />
-            <End EntitySet="event_to_user" Role="event_to_user" />
+            <End Role="events" EntitySet="events" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_to_user_groups" Association="Self.FK_event_to_user_groups">
-            <End EntitySet="groups" Role="groups" />
-            <End EntitySet="event_to_user" Role="event_to_user" />
+            <End Role="groups" EntitySet="groups" />
+            <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_event_user" Association="Self.FK_event_user">
-            <End EntitySet="users" Role="users" />
-            <End EntitySet="events" Role="events" />
+            <End Role="users" EntitySet="users" />
+            <End Role="events" EntitySet="events" />
           </AssociationSet>
           <AssociationSet Name="FK_events_group" Association="Self.FK_events_group">
-            <End EntitySet="groups" Role="groups" />
-            <End EntitySet="events" Role="events" />
+            <End Role="groups" EntitySet="groups" />
+            <End Role="events" EntitySet="events" />
           </AssociationSet>
           <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
-            <End EntitySet="users" Role="users" />
-            <End EntitySet="groups" Role="groups" />
+            <End Role="users" EntitySet="users" />
+            <End Role="groups" EntitySet="groups" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -215,6 +217,8 @@
           <NavigationProperty Name="user" Relationship="Self.FK_userGroup_to_user" FromRole="user_to_group" ToRole="users" />
           <Property Name="color" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
           <Property Name="isDeleted" Type="Boolean" DefaultValue="False" />
+          <Property Name="confirm_manage" Type="Boolean" />
+          <Property Name="reminder" Type="Double" />
         </EntityType>
         <EntityType Name="user">
           <Key>
@@ -353,7 +357,7 @@
           <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OwnerId" Type="Int32" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
-          <Property Name="Subject" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Guid" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="NumOfHouers" Type="Decimal" Precision="17" Scale="6" annotation:StoreGeneratedPattern="Computed" />
@@ -428,6 +432,8 @@
           <EntitySetMapping Name="user_to_group">
             <EntityTypeMapping TypeName="volunteersModel.user_to_group">
               <MappingFragment StoreEntitySet="user_to_group">
+                <ScalarProperty Name="reminder" ColumnName="reminder" />
+                <ScalarProperty Name="confirm_manage" ColumnName="confirm_manage" />
                 <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
                 <ScalarProperty Name="color" ColumnName="color" />
                 <ScalarProperty Name="id" ColumnName="id" />

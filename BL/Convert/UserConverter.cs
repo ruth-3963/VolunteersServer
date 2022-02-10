@@ -38,5 +38,15 @@ namespace BL.Convert
                 resetPasswordToken = userDTO.resetPasswordToken
             };
         }
+        public static List<user> ConvertToListOfUsers(List<UserDTO> usersDTO)
+        {
+            List<user> users = usersDTO.Select(ud => ConvertToUser(ud)).ToList();
+            return users;
+        }
+        public static List<UserDTO> ConvertToListOfGroupDTO(List<user> users)
+        {
+            List<UserDTO> usersDTO = users.Select(ud => ConvertToUserDTO(ud)).ToList();
+            return usersDTO;
+        }
     }
 }

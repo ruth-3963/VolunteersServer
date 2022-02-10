@@ -20,6 +20,8 @@ namespace BL.Convert
                 is_manager = userToGroup.is_manager,
                 color = userToGroup.color,
                 isDeleted = userToGroup.isDeleted,
+                confirmManager = userToGroup.confirm_manage,
+                reminder = userToGroup.reminder,
                 group = GroupConverter.ConvertToGroupDTO(userToGroup.group)
             };
         }
@@ -34,6 +36,8 @@ namespace BL.Convert
                 is_manager = userToGroupDTO.is_manager,
                 color = userToGroupDTO.color,
                 isDeleted = userToGroupDTO.isDeleted,
+                confirm_manage = userToGroupDTO.confirmManager,
+                reminder = userToGroupDTO.reminder,
                 group = GroupConverter.ConvertToGroup(userToGroupDTO.group)
             };
         }
