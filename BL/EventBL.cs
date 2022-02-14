@@ -123,11 +123,24 @@ namespace BL
                 {
                     eventFromDB.OwnerId = null;
                     subject = volunteer.name + "inlay in" + eventFromDB.Subject + "shift";
+                    event_to_user eventToUser = db.event_to_user.FirstOrDefault(e => e.eventId == eventFromDB.id);
+                    if(eventToUser != null)
+                    {
+                        db.event_to_user.Remove(eventToUser);
+                    }
                 }
                 else
                 {
                     eventFromDB.OwnerId = userId;
                     subject = volunteer.name + "cancel inlay in" + eventFromDB.Subject + "shift";
+                    List<int> usersEventIds = eventFromDB.event_to_user.Select(etu => etu.userId)?.ToList();
+                    if (usersEventIds == null || usersEventIds.Count == 0 || !usersEventIds.Contains(userId))
+                    {
+                        db.event_to_user.Add(new event_to_user()
+                        {
+                            userId = userId,eventId = eventFromDB.id,groupId = eventFromDB.GroupId
+                        });
+                    }
                 }
                 try
                 {

@@ -46,6 +46,17 @@ namespace BL.Inlay
             newState = (Dictionary<user, UserHoursState>)state.OrderBy(s => s.Value);
             return newState;
         }
+        public static void inlayUser(user userToInlay,@event eventToInlay,List<user> possibleUsers, Dictionary<user, UserHoursState> state,decimal avg)
+        {
+            decimal currentHours = eventToInlay.NumOfHouers.GetValueOrDefault();
+            state[userToInlay].Taken += currentHours;
+            if (state[userToInlay].Taken > avg)
+                state[userToInlay].IsMoreAvg = true;
+            foreach (user item in possibleUsers)
+            {
+                state[item].Left -= currentHours;
+            }
+        }
 
     }
 }

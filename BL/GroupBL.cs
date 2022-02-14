@@ -149,7 +149,8 @@ namespace BL
                 group currGroup = db.groups.Find(groupId);
                 if (currGroup == null) return null;
                 List<event_to_user> eventsToUsers = currGroup.event_to_user.ToList();
-                List<@event> groupEvents = EventConverter.ConvertToListOfEvents(events);
+                List<int> eventsIds = events.Select(e => e.id).ToList();
+                List<@event> groupEvents = db.events.Where(e => eventsIds.Contains(e.id))?.ToList();
                 if (eventsToUsers == null || groupEvents == null)
                     return null;
                 return Inlay.InlayEvents.Calc(currGroup, eventsToUsers, groupEvents);
