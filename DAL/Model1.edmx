@@ -26,7 +26,7 @@
           <Property Name="Subject" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Guid" Type="nvarchar" MaxLength="250" />
-          <Property Name="NumOfHouers" Type="numeric" Precision="17" Scale="6" StoreGeneratedPattern="Computed" />
+          <Property Name="NumOfHouers" Type="int" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="groups">
           <Key>
@@ -70,8 +70,8 @@
           <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="255" />
           <Property Name="phone" Type="varchar" MaxLength="15" />
-          <Property Name="resetPasswordToken" Type="varchar" MaxLength="50" />
           <Property Name="reserPasswordExpired" Type="datetime" />
+          <Property Name="resetPasswordToken" Type="varchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_event_to_user">
           <End Role="users" Type="Self.users" Multiplicity="1" />
@@ -109,18 +109,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_event_user">
-          <End Role="users" Type="Self.users" Multiplicity="0..1" />
-          <End Role="events" Type="Self.events" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="events">
-              <PropertyRef Name="OwnerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_events_group">
           <End Role="groups" Type="Self.groups" Multiplicity="1" />
           <End Role="events" Type="Self.events" Multiplicity="*" />
@@ -133,6 +121,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_events_owner">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_manager_to_users">
           <End Role="users" Type="Self.users" Multiplicity="1" />
           <End Role="groups" Type="Self.groups" Multiplicity="*" />
@@ -142,6 +142,30 @@
             </Principal>
             <Dependent Role="groups">
               <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroup_to_user">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_userGroupr_to_group">
+          <End Role="groups" Type="Self.groups" Multiplicity="0..1" />
+          <End Role="user_to_group" Type="Self.user_to_group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_to_group">
+              <PropertyRef Name="group_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -164,17 +188,25 @@
             <End Role="groups" EntitySet="groups" />
             <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
-          <AssociationSet Name="FK_event_user" Association="Self.FK_event_user">
-            <End Role="users" EntitySet="users" />
-            <End Role="events" EntitySet="events" />
-          </AssociationSet>
           <AssociationSet Name="FK_events_group" Association="Self.FK_events_group">
             <End Role="groups" EntitySet="groups" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_events_owner" Association="Self.FK_events_owner">
+            <End Role="users" EntitySet="users" />
             <End Role="events" EntitySet="events" />
           </AssociationSet>
           <AssociationSet Name="fk_manager_to_users" Association="Self.fk_manager_to_users">
             <End Role="users" EntitySet="users" />
             <End Role="groups" EntitySet="groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroup_to_user" Association="Self.FK_userGroup_to_user">
+            <End Role="users" EntitySet="users" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_userGroupr_to_group" Association="Self.FK_userGroupr_to_group">
+            <End Role="groups" EntitySet="groups" />
+            <End Role="user_to_group" EntitySet="user_to_group" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -232,9 +264,9 @@
           <NavigationProperty Name="groups" Relationship="Self.fk_manager_to_users" FromRole="users" ToRole="groups" />
           <NavigationProperty Name="user_to_group" Relationship="Self.FK_userGroup_to_user" FromRole="users" ToRole="user_to_group" />
           <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user" FromRole="user" ToRole="event_to_user" />
-          <NavigationProperty Name="events" Relationship="volunteersModel.FK_event_user" FromRole="user" ToRole="event" />
           <Property Name="reserPasswordExpired" Precision="3" Type="DateTime" />
           <Property Name="resetPasswordToken" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="events" Relationship="volunteersModel.FK_events_owner" FromRole="user" ToRole="event" />
         </EntityType>
         <Association Name="fk_manager_to_users">
           <End Type="Self.user" Multiplicity="1" Role="users" />
@@ -303,12 +335,12 @@
             <End Role="event" EntitySet="events" />
             <End Role="event_to_user" EntitySet="event_to_user" />
           </AssociationSet>
-          <AssociationSet Name="FK_event_user" Association="volunteersModel.FK_event_user">
-            <End EntitySet="users" Role="user" />
-            <End EntitySet="events" Role="event" />
-          </AssociationSet>
           <AssociationSet Name="FK_events_group" Association="volunteersModel.FK_events_group">
             <End Role="group" EntitySet="groups" />
+            <End Role="event" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_events_owner" Association="volunteersModel.FK_events_owner">
+            <End Role="user" EntitySet="users" />
             <End Role="event" EntitySet="events" />
           </AssociationSet>
           </EntityContainer>
@@ -360,10 +392,10 @@
           <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Guid" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="NumOfHouers" Type="Decimal" Precision="17" Scale="6" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="NumOfHouers" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="event_to_user" Relationship="volunteersModel.FK_event_to_user_event" FromRole="event" ToRole="event_to_user" />
-          <NavigationProperty Name="user" Relationship="volunteersModel.FK_event_user" FromRole="event" ToRole="user" />
           <NavigationProperty Name="group" Relationship="volunteersModel.FK_events_group" FromRole="event" ToRole="group" />
+          <NavigationProperty Name="user" Relationship="volunteersModel.FK_events_owner" FromRole="event" ToRole="user" />
         </EntityType>
         <Association Name="FK_event_to_user_event">
           <End Type="volunteersModel.event" Role="event" Multiplicity="1" />
@@ -377,18 +409,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_event_user">
-          <End Type="volunteersModel.user" Multiplicity="0..1" Role="user" />
-          <End Type="volunteersModel.event" Multiplicity="*" Role="event" />
-          <ReferentialConstraint>
-            <Principal Role="user">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="event">
-              <PropertyRef Name="OwnerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_events_group">
           <End Type="volunteersModel.group" Role="group" Multiplicity="1" />
           <End Type="volunteersModel.event" Role="event" Multiplicity="*" />
@@ -398,6 +418,18 @@
             </Principal>
             <Dependent Role="event">
               <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_events_owner">
+          <End Type="volunteersModel.user" Role="user" Multiplicity="0..1" />
+          <End Type="volunteersModel.event" Role="event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event">
+              <PropertyRef Name="OwnerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

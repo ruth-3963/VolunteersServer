@@ -31,7 +31,7 @@ namespace BL
         {
             using (volunteersEntities db = new volunteersEntities())
             {
-                List<@event> events = db.events.Where(e => e.GroupId == GroupId).ToList();
+                List<@event> events = db.events.Where(e => e.GroupId == GroupId)?.ToList();
                 return BL.Convert.EventConverter.ConvertToListOfEventDTO(events);
             }
         }
