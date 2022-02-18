@@ -104,7 +104,7 @@ namespace BL
                 {
                     mailMessage.To.Add(new MailAddress(email)); ;
                 });
-                return GroupBL.SendEmail(mailMessage);
+                return Email.SendEmail(mailMessage);
             }
         }
 
@@ -152,7 +152,7 @@ namespace BL
                         Subject = subject,
                         Body = "In date " + eventFromDB.StartTime
                     };
-                    //GroupBL.SendEmail(message);
+                    //Email.SendEmail(message);
                     return true;
                 }
                 catch
@@ -218,7 +218,7 @@ namespace BL
                         Body = body
                     };
                     message.To.Add(x.user.email);
-                   // GroupBL.SendEmail(message);
+                   // Email.SendEmail(message);
                     Debug.WriteLine(body);
                 });
             }

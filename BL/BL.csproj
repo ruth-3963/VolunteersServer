@@ -97,6 +97,7 @@
     <Compile Include="Convert\GroupConverter.cs" />
     <Compile Include="Convert\UserConverter.cs" />
     <Compile Include="Convert\UsersToGroupsConverter.cs" />
+    <Compile Include="Email.cs" />
     <Compile Include="EventBL.cs" />
     <Compile Include="EventToUserBL.cs" />
     <Compile Include="GroupBL.cs" />

@@ -98,7 +98,7 @@ namespace BL
                 message.To.Add(oldManager.user.email);
                 try
                 {
-                   // SendEmail(message);
+                   // Email.SendEmail(message);
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +129,7 @@ namespace BL
                 mailMessage.To.Add(newManager.email);
                 try
                 {
-                    //SendEmail(mailMessage);
+                    //Email.SendEmail(mailMessage);
                     user_to_group managerToGroup =
                         db.user_to_group.FirstOrDefault(ug => ug.user_id == newManager.id && ug.group_id == DBgroup.id);
                     managerToGroup.confirm_manage = true;
@@ -215,24 +215,6 @@ namespace BL
             }
 
         }
-        public static bool SendEmail(MailMessage message)
-        {
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
-                EnableSsl = true,
-            };
-            try
-            {
-                smtpClient.Send(message);
-                return true;
-            }
-            catch (SmtpException smtpExeption)
-            {
-                Console.WriteLine(smtpExeption.Message);
-                return false;
-            }
-        }
+       
     }
 }

@@ -104,7 +104,17 @@ namespace BL
                     }
                     user_to_group newUserToGroup = new user_to_group() { group_id = emailsGroup.group.id, user_id = user1.id, is_manager = false };
                     db.user_to_group.Add(newUserToGroup);
-                    if (sendEmail(user1, emailsGroup))
+                    emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signup", "http://localhost:3000/signup?email=" + user1.email + "/");
+                    emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signin", "http://localhost:3000/signin?email=" + user1.email + "/");
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("ostrovruti@gmail.com"),
+                        Subject = emailsGroup.subject,
+                        Body = emailsGroup.html,
+                        IsBodyHtml = true,
+                    };
+                    mailMessage.To.Add(user1.email);
+                    if (Email.SendEmail(mailMessage))
                     {
                         emails.Add(user1.email);
                     }
@@ -127,36 +137,6 @@ namespace BL
             }
         }
 
-        private static bool sendEmail(user user1, EmailsGroup emailsGroup)
-        {
-            string from = "ostrovruti@gmail.com";
-            string to = user1.email;
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
-                EnableSsl = true,
-            };
-            emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signup", "http://localhost:3000/signup?email=" + user1.email + "/");
-            emailsGroup.html = emailsGroup.html.Replace("http://localhost:3000/signin", "http://localhost:3000/signin?email=" + user1.email + "/");
-
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(from),
-                Subject = emailsGroup.subject,
-                Body = emailsGroup.html,
-                IsBodyHtml = true,
-            };
-            mailMessage.To.Add(to);
-            try
-            {
-                smtpClient.Send(mailMessage);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+     
     }
 }
