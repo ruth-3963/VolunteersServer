@@ -15,7 +15,7 @@ namespace BL
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("ostrovruti@gmail.com", "ridi0556783963"),
+                Credentials = new NetworkCredential("explane@gmail.com", "password"),
                 EnableSsl = true,
             };
             try

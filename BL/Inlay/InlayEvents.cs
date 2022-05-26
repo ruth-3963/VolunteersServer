@@ -26,7 +26,7 @@ namespace BL.Inlay
                 else { 
                     return null; 
                 }
-                inlayToUsersWithLessThanAverage(eventWithListOfUsers,usersState,average);
+                //inlayToUsersWithLessThanAverage(eventWithListOfUsers,usersState,average);
                 foreach (KeyValuePair<@event, List<user>> entry in eventWithListOfUsers)
                 {
                     @event eventToSave = entities.events.FirstOrDefault(element => element.id == entry.Key.id);

@@ -195,7 +195,7 @@ namespace BL
             //get events in Next 24 hours
             using(volunteersEntities db = new volunteersEntities())
             {
-                List<@event> eventIn24Hours =
+                List<@event> eventsToReminder =
                     db.events.AsEnumerable().Where(e => {
                         if (e.OwnerId == null) return false;
                         user_to_group utg = db.user_to_group.FirstOrDefault(item => item.group_id == e.GroupId && item.user_id == e.OwnerId);
@@ -203,7 +203,7 @@ namespace BL
                         DateTime timeToReminder = TrimSeconds(e.StartTime.AddHours((double)(utg.reminder * -1)));
                         return timeToReminder == TrimSeconds(DateTime.Now);
                         }).ToList();
-                eventIn24Hours.ForEach(x =>
+                eventsToReminder.ForEach(x =>
                 {
                     //  if (dtOrig.TrimMilliseconds() == dtNew.TrimMilliseconds())
 

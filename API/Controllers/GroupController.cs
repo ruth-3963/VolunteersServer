@@ -47,9 +47,9 @@ namespace API.Controllers
         }
         [HttpPost]
         [Route("group/newManagerAnswer/{isAgree}")]
-        public void NewManagerAnswer(bool isAgree, [FromBody] UsersToGroupsDTO userToGroup)
+        public GroupDTO NewManagerAnswer(bool isAgree, [FromBody] UsersToGroupsDTO userToGroup)
         {
-            GroupBL.SetManager(isAgree, userToGroup);
+            return GroupBL.SetManager(isAgree, userToGroup);
         }
     }
 }

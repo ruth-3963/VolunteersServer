@@ -57,7 +57,7 @@ namespace BL
 
         }
 
-        public static void SetManager(bool isAgree, UsersToGroupsDTO userToGroup)
+        public static GroupDTO SetManager(bool isAgree, UsersToGroupsDTO userToGroup)
         {
             using (volunteersEntities db = new volunteersEntities())
             {
@@ -71,7 +71,7 @@ namespace BL
                 string userName = newManager.user.name;
                 string userEmail = newManager.user.email;
                 string userValue = userName != null ? userName :
-                                   "user with email" + userEmail;
+                                   "user with email " + userEmail;
                 if (isAgree)
                 {
                     newManager.is_manager = true;
@@ -104,6 +104,7 @@ namespace BL
                 {
                     Console.WriteLine(ex.Message);
                 }
+                return Convert.GroupConverter.ConvertToGroupDTO(currGroup);
             }
         }
 

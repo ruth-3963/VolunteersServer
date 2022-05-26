@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert\EmailConverter.cs" />
     <Compile Include="Convert\EventConverter.cs" />
     <Compile Include="Convert\EventToUserConverter.cs" />
     <Compile Include="Convert\GroupConverter.cs" />
